@@ -1,0 +1,17 @@
+{
+  "name": "path_auth",
+  "version": "1.0.0",
+  "description": "Testing Authentication for nodejs directories",
+  "main": "index.js",
+  "scripts": {
+    "test": "node src/server/index.js",
+    "start": "indexCopy.js"
+  },
+  "author": "Luke Moyer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
