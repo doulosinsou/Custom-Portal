@@ -7,7 +7,9 @@
   <title>Authentication Home Page</title>
 
   <link href="../css/main.css" rel="stylesheet">
-  <script src="../js/browser.js" type="script"></script>
+
+  <script src="../js/browser.js"></script>
+
 </head>
 <body>
   <header>
@@ -15,6 +17,12 @@
   </header>
   <main>
     <p>You must log in to see the directory</p>
+    <form id = "auth">
+      <input type="text" name="name">
+      <input type="text" name="pass">
+      <button id="sub">Request Info</button>
+    </form>
+    <p>Your token is: <span id = "token" ></span></p>
   </main>
   <footer>
     <p>Luke Moyer 2020</p>
