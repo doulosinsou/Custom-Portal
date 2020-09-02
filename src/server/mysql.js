@@ -7,22 +7,18 @@ const con = mysql.createConnection({
   database: "moyeraud_calculator"
 });
 
-async function testData(auth){
-  const promiseDat = new Promise(function(resolve, reject){
-    con.connect(async (err) => {
-      if(err)
-      throw err;
-      console.log("connected to mysql");
-      const data = con.query(
-          "SELECT * FROM authentication WHERE name ='"+auth+"'",
-          function(err, result){
-            if (err)
-            throw err
-            resolve(result[0]);
+const testData = async function(auth){
+  return new Promise(function(resolve, reject){
+    con.connect((err) => {
+      if(err) throw err;
+      console.log("mysql.js connected to mysql");
+      const query = "SELECT * FROM authentication WHERE name ='"+auth+"'";
+      con.query(query, function(err, result){
+        if (err) throw err;
+        resolve(result[0]);
       });
     })
   });
-  return promiseDat;
 };
 
 module.exports = testData;
