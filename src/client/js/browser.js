@@ -5,7 +5,6 @@ console.log("js connected");
 document.getElementById("auth").addEventListener("submit", giveToken);
 }
 
-
 async function giveToken(){
   event.preventDefault();
   console.log("made form request to server");
@@ -15,14 +14,13 @@ async function giveToken(){
     pass: form.pass.value
   }
   console.log(data);
-  const check = await authenticate('/calc', data);
+  const check = await postIt('/calc', data);
   console.log("authentication response is:"+check);
   document.getElementById('token').innerHTML = check;
 
 }
 
-
-const authenticate = async (url = '', data = {})=>{
+const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
     method:'POST',
     credentials: 'same-origin',

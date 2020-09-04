@@ -21,9 +21,6 @@ app.post('/calc', authenticate);
 
 async function authenticate(req,res){
   const ask = await query(req.body.name);
-  console.log("ask.pass is: ");
-  console.log(ask.pass);
-
   if (ask.pass === req.body.pass){
     console.log("pass matched");
     res.send(ask.token);
