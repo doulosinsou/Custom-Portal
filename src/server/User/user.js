@@ -20,7 +20,9 @@ async function createUser(submit){
   const columns = ["name", "email", "pass"];
   const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
   const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
-  const newUser = await fetchData(newRow);
+  fetchData(newRow);
+  const newUser = await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
+
   return newUser;
 }
 

@@ -18,8 +18,8 @@ async function register(){
   // console.log(userData);
   const valid = validate(userData, "warning");
   if (!valid) throw "invalid entry";
-  console.log("ready to 'check'");
-  const check = await postIt('/user/register', userData);
+  console.log("Passed Validator; ready to register");
+  const check = await postIt('/register', userData);
 
   console.log("authentication response is: ");
   console.log(check);
@@ -77,7 +77,14 @@ async function login(){
 
   addCookie("login", check.token, 6);
   // return check;
-
+  fetch("/portal/home", {
+    method:'GET',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': token
+    }
+  });
 }
 
 function addCookie(name, data, months){
@@ -95,7 +102,7 @@ function getCookie(name){
 async function permission(){
   const token = getCookie("login");
 
-  const get = await fetch("/user/portal", {
+  const get = await fetch("/portal", {
     method:'GET',
     credentials: 'same-origin',
     headers: {
@@ -110,6 +117,7 @@ async function permission(){
       document.getElementById("userName").innerHTML = "You are not logged in";
   }else{
       console.log("your username is: "+response.name); document.getElementById("userName").innerHTML = "Welcome "+response.name;
+      console.log("your ID is: "+response.ID);
   }
 
   }catch(error){

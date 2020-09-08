@@ -4,32 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Login</title>
+  <title>Register</title>
 
   <link href="main.css" rel="stylesheet">
 
-  <script src="login.js"></script>
+  <script src="register.js"></script>
 
 </head>
 <body>
   <header>
-    <h1>Moyer Audio App</h1>
+    <h1>Moyer Audio app</h1>
   </header>
   <main>
     <section>
-      <h2>Login</h2>
+      <h2>Register New User</h2>
       <p id="comment"></p>
-      <form id = "log">
+      <form id = "auth">
         <label for="name">UserName</label>
         <input type="text" name="name">
+        <label for="email">email</label>
+        <input type="email" name="email">
         <label for="pass">password</label>
         <input type="text" name="pass">
-        <button id="login">Login</button>
+        <button id="sub">Request Info</button>
       </form>
-      <p id="logErr"></p>
+      <p id="warning"></p>
     </section>
-    <a href="register.html">Register New User</a>
-    <button id = "next">Go to portal</button>
+    <form action="/mock" method="get">
+      <input type="submit">Mock Register</input>
   </main>
   <footer>
     <p>Luke Moyer 2020</p>
