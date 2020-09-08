@@ -12,7 +12,7 @@ const pool = mysql.createPool({
 const allMysql = async function (query){
   return new Promise(function(resolve, reject){
       pool.query(query, function(err, result){
-        if (err) throw err;
+        if (err) resolve({err:err})
         // console.log("mysql.js allMysal function result below: ");
         // console.log(result);
         resolve(result);

@@ -16,17 +16,35 @@
     <h1>Authentication Demo</h1>
   </header>
   <main>
-    <p>You must log in to see the directory</p>
-    <form id = "auth">
-      <label for="name">UserName</label>
-      <input type="text" name="name">
-      <label for="email">email</label>
-      <input type="email" name="email">
-      <label for="pass">password</label>
-      <input type="text" name="pass">
-      <button id="sub">Request Info</button>
-    </form>
-    <p id="warning"></p>
+    <section>
+      <p>You must log in to see the directory</p>
+      <form id = "auth">
+        <label for="name">UserName</label>
+        <input type="text" name="name">
+        <label for="email">email</label>
+        <input type="email" name="email">
+        <label for="pass">password</label>
+        <input type="text" name="pass">
+        <button id="sub">Request Info</button>
+      </form>
+      <p id="warning"></p>
+    </section>
+    <section>
+      <p>You must log in to see the directory</p>
+      <form id = "log">
+        <label for="name">UserName</label>
+        <input type="text" name="name">
+        <label for="pass">password</label>
+        <input type="text" name="pass">
+        <button id="login">Login</button>
+      </form>
+      <p id="logErr"></p>
+    </section>
+    <button onclick="addCookie('login', {auth: false, token: null}, -6)">logout</button>
+
+    <br>
+    <button onclick="permission()">Do I have permission?</button>
+    <h3 id="userName"></h3>
   </main>
   <footer>
     <p>Luke Moyer 2020</p>
