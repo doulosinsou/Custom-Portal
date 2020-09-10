@@ -2,19 +2,20 @@ window.addEventListener("load", start)
 
 function start(){
 console.log("js connected");
-// logCheck;
+// logCheck();
 document.getElementById("log").addEventListener("submit", sequence);
 document.getElementById("next").addEventListener("click",
-logCheck);
+function(){logCheck()});
 }
 
 async function sequence(){
   login()
-  .then(function(check){
-    addCookie("login", check.token, 6);
-  })
+  .then(
+    // logCheck
+    // addCookie("login", check.token, 6);
+  )
   .then(function(req){
-      logCheck()
+      // logCheck()
   })
 }
 
@@ -22,6 +23,9 @@ const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
     method:'POST',
     credentials: 'same-origin',
+    // mode: 'same-origin',
+    // redirect:'follow',
+    // credentials:'include',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(data),
   })
@@ -42,10 +46,11 @@ async function login(){
   };
   const valid = validate(userData, "logErr");
   if (!valid) throw "invalid entry";
-
+  // postIt('/login', userData);
   const check = await postIt('/login', userData);
-
-  return check;
+  console.log("login called");
+  console.log(check);
+  return;
 }
 
 function validate(userData, warning){
@@ -64,28 +69,37 @@ function validate(userData, warning){
 }
 
 async function addCookie(name, data, months){
+  console.log("addCookie called");
+
+  // if (navigator.userAgent.indexOf("Safari") != -1) months = .2;
+
   const today = new Date();
   today.setMonth(today.getMonth()+ months);
-  const expires = "expires ="+today.toUTCString();
-  document.cookie = name+'='+data+';'+expires+'; SameSite=Strict; Secure; path=/';
+  const expires = "expires ="+today.toGMTString();
+  const noComma = expires.replace(/,/g, '');
+  document.cookie = '"'+name+'='+data+'; '+expires+'; SameSite=Strict; Secure; path=/"';
+  const get = getCookie(name);
+  console.log('"'+name+'='+data+'; '+expires+'; SameSite=Strict; Secure; path=/"');
   return "setcookie";
 }
 
 function getCookie(name){
   const match = document.cookie.match(new RegExp('(^|)' + name + '=([^;]+)'));
-  if (match[2] === "null") return false;
+  if(!match[2]) return false;
+  // if (match[2] === "null") return false;
+  console.log(match[2]);
   if (match) return match[2];
 }
 
 async function logCheck(){
-  const token = getCookie("login");
-  if (!token) {console.log("No Token in cookies"); return false;}
+  // const token = getCookie("login");
+  // if (!token) {console.log("No Token in cookies"); return false;}
   const redirect = await fetch("/port", {
     method:'POST',
     credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
-      'x-access-token': token,
+      // 'x-access-token': token,
     },
     // body: {access_origin:"login-page"}
   });

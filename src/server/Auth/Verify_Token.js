@@ -5,11 +5,21 @@ const dotenv = require('dotenv').config();
 function verifyToken(req,res,next){
   console.log("verifyToken called");
 
-  const match = req.headers.cookie.match(new RegExp('(^|)' + 'login' + '=([^;]+)'));
+  let ismatch
+  if(!req.headers.cookie) {
+    ismatch = "";
+  }else{
+  match = req.headers.cookie.match(new RegExp('(^|)' + 'login' + '=([^;]+)'));
+      if(!match){
+        ismatch = "";
+      }else{
+        ismatch = match[2];
+      }
+  } 
 
   // console.log(match[2]);
 
-  const token = req.headers['x-access-token'] || match[2];
+  const token = req.headers['x-access-token'] || ismatch;
   if (!token) req.err = {auth: false, message: 'No token provided.'};
 
   jwt.verify(token, process.env.SECRET, async function(err, decoded) {

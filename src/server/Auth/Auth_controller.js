@@ -12,7 +12,8 @@ const bcrypt = require('bcryptjs');
 const config = require('../config');
 
 const verifyToken = require('./Verify_Token')
-
+// const cookieParser = require('cookie-parser');
+const cookies = require('cookies')
 
 
 async function register(req, res, next) {
@@ -54,6 +55,20 @@ async function login(req, res, next) {
     expiresIn: 86400 // expires in 24 hours
   });
   console.log(find[0].name+" has just logged in");
+  const sixmo = 60*60*24*30*6 //sec*min*hours*days*montsh
+  const dets = {
+    maxAge: sixmo,
+    secure: false,
+    httpOnly: false,
+    path: '/',
+    signed: false
+  }
+
+  const cooks = new cookies(req,res);
+  cooks.set("login", token, dets);
+
+  // res.cookie("login", token, dets).send('cookie set');
+
   res.status(200).send({ auth: true, token: token });
 
   }

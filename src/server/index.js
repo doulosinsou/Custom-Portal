@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const path = require('path');
+
 const query = require('./mysql.js');
 const authController = require('./Auth/Auth_controller');
 const verifyToken = require('./Auth/Verify_Token');
@@ -12,6 +13,8 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cors());
 
+// const cookieParser = require('cookie-parser');
+// app.use(cookieParser());
 
 app.use(express.static("./src/client"));
 app.use(express.static("./src/portal2"));
@@ -23,14 +26,27 @@ const server = app.listen(port, ()=>{
 });
 
 
-app.use('/', express.static("./src/client"));
-app.use('/portal', express.static('./src/portal2'));
+// app.use(middleware);
+app.use('/client', express.static("./src/client"));
+app.use('/portal', verifyToken, middleware, express.static('./src/portal2'));
 
 // app.use('/user', authController);
 
-function middleware(req, res, next){
-  console.log("/portal afterware called");
-  next();
+async function middleware(req, res, next){
+  // verifyToken(req,res,next);
+  if (req.err){
+    console.log(req.err);
+    return res.redirect(301, "/client");
+    // req.url = "/client";
+    // res.send("/");
+  }else{
+    console.log("passed middleware test");
+    // req.url = "/portal/me"+req.url;
+    next();
+    // res.redirect("/portal");
+
+  }
+  // next();
 }
 // app.use('/portal', function(req, res){
   // res.redirect('./src/portal2');
