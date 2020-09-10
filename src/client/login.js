@@ -3,9 +3,19 @@ window.addEventListener("load", start)
 function start(){
 console.log("js connected");
 // logCheck;
-document.getElementById("log").addEventListener("submit", login);
+document.getElementById("log").addEventListener("submit", sequence);
 document.getElementById("next").addEventListener("click",
 logCheck);
+}
+
+async function sequence(){
+  login()
+  .then(function(check){
+    addCookie("login", check.token, 6);
+  })
+  .then(function(req){
+      logCheck()
+  })
 }
 
 const postIt = async (url = '', data = {})=>{
@@ -25,7 +35,6 @@ const postIt = async (url = '', data = {})=>{
 
 async function login(){
   event.preventDefault();
-  console.log("made login request to server");
   const form = document.getElementById("log");
   const userData = {
     name: form.name.value,
@@ -36,17 +45,11 @@ async function login(){
 
   const check = await postIt('/login', userData);
 
-  console.log("authentication response is: ");
-  console.log(check);
-
-  addCookie("login", check.token, 6);
-
-  logCheck;
+  return check;
 }
 
 function validate(userData, warning){
   const warn = document.getElementById(warning);
-  console.log(userData);
   if (userData.nameExists){
     warning.innerHTML = userData.nameExists;
   }else{
@@ -60,39 +63,42 @@ function validate(userData, warning){
   }
 }
 
-function addCookie(name, data, months){
+async function addCookie(name, data, months){
   const today = new Date();
   today.setMonth(today.getMonth()+ months);
   const expires = "expires ="+today.toUTCString();
   document.cookie = name+'='+data+';'+expires+'; SameSite=Strict; Secure; path=/';
+  return "setcookie";
 }
 
 function getCookie(name){
   const match = document.cookie.match(new RegExp('(^|)' + name + '=([^;]+)'));
+  if (match[2] === "null") return false;
   if (match) return match[2];
 }
 
 async function logCheck(){
-  // const token = getCookie("login");
-  // if (!token) return false;
-  const redirect = await fetch("/portal");
+  const token = getCookie("login");
+  if (!token) {console.log("No Token in cookies"); return false;}
+  const redirect = await fetch("/port", {
+    method:'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-access-token': token,
+    },
+    // body: {access_origin:"login-page"}
+  });
+  const json = await redirect.json();
 
-  // const call = fetch("/home", {
-  //   method:'POST',
-  //   credentials: 'same-origin',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'x-access-token': token
-  //   }
-  // });
-  try{
-    const response = await redirect;
-    console.log("logCheck fetch response is:");
-    console.log(response.url);
-    window.location.href = response.url;
+  if (!json.redirect){
+    console.log("failed to login");
+    document.getElementById('comment').innerHTML = "Failed to Login";
+}else{
 
-  }catch(err){
-    console.log(err);
-
+    console.log("ready to go");
+    console.log(json.redirect)
+    window.location.href = json.redirect;
   }
+
 }

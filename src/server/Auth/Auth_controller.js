@@ -36,7 +36,7 @@ async function register(req, res, next) {
   };
 
 async function login(req, res, next) {
-  console.log("login function declared; about to find name in database")
+  // console.log("login function declared; about to find name in database")
   const query = "SELECT * FROM authentication WHERE name='"+req.body.name+"'";
   const find = await fetchData(query);
 
@@ -53,6 +53,7 @@ async function login(req, res, next) {
   const token = jwt.sign({id: find[0].ID}, process.env.SECRET, {
     expiresIn: 86400 // expires in 24 hours
   });
+  console.log(find[0].name+" has just logged in");
   res.status(200).send({ auth: true, token: token });
 
   }
