@@ -1,31 +1,23 @@
-// const mysql = require('mysql');
-// const dotenv = require('dotenv').config();
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
+const createUser = require('../User/user').create;
 const fetchData = require('../mysql');
 
-// const pool = mysql.createPool({
-//   connectionLimit : 5,
-//   host: process.env.MYSQL_HOST,
-//   user: process.env.MYSQL_USER,
-//   password: process.env.MYSQL_PASSWORD,
-//   database: process.env.MYSQL_DATABASE
-// });
 
-async function createUser(submit){
-  const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+submit.name+"')";
-  const find = await fetchData(existsQuery);
-  const exists = find[0][Object.keys(find[0])[0]];
-  if (exists) return {nameExists:"Cannot use that Username"};
-  // return find;
+router.get('/me', async function (req,res,next){
+  console.log('made get request to /portal/me');
+  const query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
+  const me = await fetchData(query);
+  me[0].pass = "";
+  me[0].ID = "";
+  res.send(me[0]);
+  // console.log("const me response:")
+  // console.log(me);
 
-  const columns = ["name", "email", "pass"];
-  const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
-  const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
-  fetchData(newRow);
-  const newUser = await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
-
-  return newUser;
-}
+})
 
 
-
-exports.create = createUser;
+module.exports = router;

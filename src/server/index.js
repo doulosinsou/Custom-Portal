@@ -6,6 +6,7 @@ const path = require('path');
 const query = require('./mysql.js');
 const authController = require('./Auth/Auth_controller');
 const verifyToken = require('./Auth/Verify_Token');
+const user = require('./User/user')
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -26,6 +27,7 @@ app.use(express.static("./src/portal2"));
 
 app.use('/client', express.static("./src/client"));
 app.use('/portal', verifyToken, middleware, express.static('./src/portal2'));
+app.use('/portal/', user);
 
 async function middleware(req, res, next){
   console.log("midleware called");
