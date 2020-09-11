@@ -2,22 +2,24 @@ window.addEventListener("load", start)
 
 function start(){
 console.log("js connected");
-// logCheck();
-document.getElementById("log").addEventListener("submit", sequence);
+logCheck();
+document.getElementById("log").addEventListener("submit", login);
 document.getElementById("next").addEventListener("click",
 function(){logCheck()});
 }
 
-async function sequence(){
-  login()
-  .then(
-    // logCheck
-    // addCookie("login", check.token, 6);
-  )
-  .then(function(req){
-      // logCheck()
-  })
-}
+// async function sequence(){
+//   login()
+//   .then(function(check){
+//     logCheck
+//   }
+//     // logCheck
+//     // addCookie("login", check.token, 6);
+//   )
+//   .then(function(req){
+//       // logCheck()
+//   })
+// }
 
 const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
@@ -50,7 +52,11 @@ async function login(){
   const check = await postIt('/login', userData);
   console.log("login called");
   console.log(check);
-  return;
+  if (check.warning){
+    document.getElementById('comment').innerHTML = check.warning;
+  }else{
+    logCheck();
+  }
 }
 
 function validate(userData, warning){
@@ -84,6 +90,7 @@ async function addCookie(name, data, months){
 }
 
 function getCookie(name){
+
   const match = document.cookie.match(new RegExp('(^|)' + name + '=([^;]+)'));
   if(!match[2]) return false;
   // if (match[2] === "null") return false;
@@ -92,8 +99,13 @@ function getCookie(name){
 }
 
 async function logCheck(){
+  console.log("logCheck called");
   // const token = getCookie("login");
-  // if (!token) {console.log("No Token in cookies"); return false;}
+  // if (!token) {
+  //   console.log("No Token in cookies");
+  //   document.getElementById('comment').innerHTML = "Incorrect credentials"
+  //   return false;
+  // }
   const redirect = await fetch("/port", {
     method:'POST',
     credentials: 'same-origin',
@@ -107,11 +119,11 @@ async function logCheck(){
 
   if (!json.redirect){
     console.log("failed to login");
-    document.getElementById('comment').innerHTML = "Failed to Login";
+    document.getElementById('comment').innerHTML = "Login attempt failed";
 }else{
 
     console.log("ready to go");
-    console.log(json.redirect)
+    console.log(json.redirect);
     window.location.href = json.redirect;
   }
 

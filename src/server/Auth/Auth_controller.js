@@ -1,9 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
-const createUser = require('../User/user').create;
+// const router = express.Router();
+// const bodyParser = require('body-parser');
+// router.use(bodyParser.urlencoded({ extended: false }));
+// router.use(bodyParser.json());
+// const createUser = require('../User/user').create;
 const fetchData = require('../mysql')
 const dotenv = require('dotenv').config();
 
@@ -26,10 +26,26 @@ async function register(req, res, next) {
     password : hashedPassword
   })
 
+  async function createUser(submit){
+    const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+submit.name+"')";
+    const find = await fetchData(existsQuery);
+    const exists = find[0][Object.keys(find[0])[0]];
+    if (exists) return {nameExists:"Cannot use that Username"};
+    // return find;
+
+    const columns = ["name", "email", "pass"];
+    const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
+    const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
+    fetchData(newRow);
+    const newUser = await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
+
+    return newUser;
+  }
+
+
   if (!created) req.data = "There was a problem registering the user";
 
   req.data = created;
-
   console.log("registered user")
 
   next()
@@ -43,6 +59,10 @@ async function login(req, res, next) {
 
   if (find.err) res.status(500).send('Error on the server.');
 
+  if (!find[0]) {
+    res.status(401).send({auth: false, warning: "invalid username"});
+    return;
+  }
   console.log("bcrypt returns: "+bcrypt.compareSync(req.body.password, find[0].pass));
 
   const validPass = bcrypt.compareSync(req.body.password, find[0].pass);
@@ -55,13 +75,14 @@ async function login(req, res, next) {
     expiresIn: 86400 // expires in 24 hours
   });
   console.log(find[0].name+" has just logged in");
-  const sixmo = 60*60*24*30*6 //sec*min*hours*days*montsh
+  const sixmo = 1000*60*60*24*30*6; //mill*sec*min*hours*days*months
   const dets = {
     maxAge: sixmo,
-    secure: false,
+    secure: false, //follow up SSL
     httpOnly: false,
     path: '/',
     signed: false
+    // overwrite:true
   }
 
   const cooks = new cookies(req,res);
