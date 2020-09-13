@@ -6,12 +6,25 @@ const fs = require('fs');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-function process(filePath, data, callback) {
+async function process(filePath, data, callback) {
+  // let header, footer;
+  // fs.readFile(__dirname+'/templates/header.ma', function (err, head){header =  head.toString()});
+  // fs.readFile(__dirname+'/templates/footer.ma', function (err, foot){footer = foot.toString()});
+
+  let header = await new Promise((resolve, reject) => {
+    fs.readFile(__dirname+'/templates/header.ma', function (err, head){
+      resolve(head);
+    })});
+  let footer = await new Promise((resolve, reject) => {
+    fs.readFile(__dirname+'/templates/footer.ma', function (err, foot){
+      resolve(foot)
+    })});
+
   fs.readFile(filePath, function (err, content) {
     if (err) return callback(err)
-    console.log("data.name is: "+data.name);
 
-    let rendered = content.toString();
+    let rendered = header.toString()+content.toString()+footer.toString();
+    // let rendered = content.toString();
     const reg = /\{\$.*?\$\}/gm;
     const marks = rendered.match(new RegExp(reg));
 

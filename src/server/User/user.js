@@ -16,14 +16,18 @@ router.get('/', async function (req,res,next){
   query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
   const call = await fetchData(query);
   const me = call[0];
-  me.pass = "";
-  me.ID = "";
+  me.backto = "";
+  me.title = "Portal Home";
   res.render('index', me);
+});
 
-  // res.send(me[0]);
-  // console.log("const me response:")
-  // console.log(me);
-
+router.get('/user', async function (req,res,next){
+  query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
+  const call = await fetchData(query);
+  const me = call[0];
+  me.backto = "/portal/";
+  me.title = "Account Settings";
+  res.render('user', me);
 });
 
 module.exports = router;
