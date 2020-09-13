@@ -26,8 +26,21 @@ app.use(express.static("./src/portal2"));
 
 
 app.use('/client', express.static("./src/client"));
-app.use('/portal', verifyToken, middleware, express.static('./src/portal2'));
-app.use('/portal/', user);
+app.use('/portal', verifyToken, middleware, user, express.static('./src/portal2'));
+// app.use('/portal', user);
+
+
+
+const maViews = require('./views/process');
+
+app.engine('ma', maViews);
+app.set('views', path.resolve(__dirname+'/views/templates'));
+app.set('view engine', 'ma');
+
+
+
+
+
 
 async function middleware(req, res, next){
   console.log("midleware called");

@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Login</title>
-
   <link href="main.css" rel="stylesheet">
 
-  <script src="login.js"></script>
 
 </head>
 <body>
@@ -17,22 +15,19 @@
   </header>
   <main>
     <section>
-      <h2>Login</h2>
-      <p id="comment"></p>
-      <form id = "log">
-        <label for="name">UserName</label>
-        <input type="text" name="name" value="selfRegisterTwo">
-        <label for="pass">password</label>
-        <input type="text" name="pass" value = "selfRegisterTwo">
-        <button id="login">Login</button>
-      </form>
-      <p id="logErr"></p>
-    </section>
-    <a href="register.html">Register New User</a>
-    <button id = "next">Go to portal</button>
+      <h2>Find the marks</h2>
+
+    <button id = "find">find tagged text</button>
+
+    <p id = "string"> this is a {$string$} which I want to find multiple {$itterations$} of. I want to return the {$value$} of each of these {$queries$}.</p>
+
+    <p>List of Tags:</p>
+    <p id="result"></p>
+
   </main>
   <footer>
     <p>Luke Moyer 2020</p>
   </footer>
+  <script src="login.js"></script>
 </body>
 </html>

@@ -1,19 +1,29 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
+const fs = require('fs');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-const createUser = require('../User/user').create;
 const fetchData = require('../mysql');
+const maViews = require('../views/process');
+
+// app.engine('ma', maViews);
+// app.set('views', '../views/templates'); // specify the views directory
+// app.set('view engine', 'ma'); // register the template engine
+
+let query;
+
+router.get('/', async function (req,res,next){
+  query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
+  const call = await fetchData(query);
+  const me = call[0];
+  me.pass = "";
+  me.ID = "";
+  res.render('index', me);
 
 
-router.get('/me', async function (req,res,next){
-  console.log('made get request to /portal/me');
-  const query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
-  const me = await fetchData(query);
-  me[0].pass = "";
-  me[0].ID = "";
-  res.send(me[0]);
+  // res.send(me[0]);
   // console.log("const me response:")
   // console.log(me);
 
