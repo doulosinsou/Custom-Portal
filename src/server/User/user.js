@@ -6,11 +6,8 @@ const fs = require('fs');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-// const mysql = require('mysql');
-// const dotenv = require('dotenv').config();
-
 const fetchData = require('../mysql');
-const maViews = require('../views/process');
+// const maViews = require('../views/process');
 
 
 let query;
@@ -27,5 +24,6 @@ router.get('/', async function (req,res,next){
   // console.log("const me response:")
   // console.log(me);
 
+});
 
 module.exports = router;

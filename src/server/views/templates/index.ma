@@ -19,8 +19,8 @@
   </header>
   <main>
     <section>
-      <h3>Welcome back #name#</h3>
-      <p>Your email is #email#</p>
+      <h3>Welcome back {$name$}</h3>
+      <p>Your email is {$email$}</p>
       <p>Let's begin to set things up:</p>
     <button onclick="permission()">Who am I?</button>
     <br>

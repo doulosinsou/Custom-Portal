@@ -11,27 +11,18 @@ function process(filePath, data, callback) {
     if (err) return callback(err)
     console.log("data.name is: "+data.name);
 
-    const rendered = content.toString();
-    let replace = rendered;
+    let rendered = content.toString();
     const reg = /\{\$.*?\$\}/gm;
-    const marks = string.match(new RegExp(reg));
-    console.log(marks);
-    // console.log(Array.from(test, x=> x[1]));
+    const marks = rendered.match(new RegExp(reg));
 
-    // const matched = rendered.matchAll(new RegExp('/#(.*?)#/'));
-    // console.log(Array.from(matched, x => x[1]));
+    for (mark in marks){
+      let tag = marks[mark];
+      let raw = tag.substring(2,tag.length-2);
+      rendered = rendered.replace(tag, data[raw]);
+    }
 
-    // for (match in matched){
-    //   console.log(matched[match]);
-    // }
-
-    // rendered
-    //   .replace('#name#', data.name)
-    //   .replace('#email#', data.email)
-    // return callback(null, rendered);
+    return callback(null, rendered);
   });
 };
-
-
 
 module.exports = process

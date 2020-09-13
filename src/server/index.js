@@ -3,9 +3,11 @@ const app = express();
 const router = express.Router();
 const path = require('path');
 
-const query = require('./mysql.js');
+// const query = require('./mysql.js');
 const authController = require('./Auth/Auth_controller');
 const verifyToken = require('./Auth/Verify_Token');
+const user = require('./User/user.js');
+
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -14,8 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-
-const port = "3031";
+const port = "3041";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
@@ -26,7 +27,7 @@ app.use(express.static("./src/portal2"));
 
 app.use('/client', express.static("./src/client"));
 app.use('/portal', verifyToken, middleware, user, express.static('./src/portal2'));
-app.use('/portal', user);
+// app.use('/portal', user);
 
 const maViews = require('./views/process');
 
