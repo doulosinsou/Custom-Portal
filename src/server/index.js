@@ -15,7 +15,7 @@ app.use(cors());
 
 
 
-const port = "3021";
+const port = "3031";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
@@ -25,28 +25,14 @@ app.use(express.static("./src/portal2"));
 
 
 app.use('/client', express.static("./src/client"));
-<<<<<<< HEAD
 app.use('/portal', verifyToken, middleware, user, express.static('./src/portal2'));
-// app.use('/portal', user);
-
-
+app.use('/portal', user);
 
 const maViews = require('./views/process');
 
 app.engine('ma', maViews);
 app.set('views', path.resolve(__dirname+'/views/templates'));
 app.set('view engine', 'ma');
-
-
-
-
-
-||||||| 31cd467... successful name response for logged in user
-app.use('/portal', verifyToken, middleware, express.static('./src/portal2'));
-app.use('/portal/', user);
-=======
-app.use('/portal', verifyToken, middleware, express.static('./src/portal2'));
->>>>>>> parent of 31cd467... successful name response for logged in user
 
 async function middleware(req, res, next){
   console.log("midleware called");
