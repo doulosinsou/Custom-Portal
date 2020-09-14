@@ -1,10 +1,7 @@
 var jwt = require('jsonwebtoken');
-var config = require('../config');
 const dotenv = require('dotenv').config();
 
 function verifyToken(req,res,next){
-  console.log("verifyToken called");
-
   let ismatch
   if(!req.headers.cookie) {
     ismatch = "";
