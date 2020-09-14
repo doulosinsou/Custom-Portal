@@ -1,20 +1,10 @@
-const express = require('express');
-// const router = express.Router();
-// const bodyParser = require('body-parser');
-// router.use(bodyParser.urlencoded({ extended: false }));
-// router.use(bodyParser.json());
-// const createUser = require('../User/user').create;
 const fetchData = require('../mysql')
 const dotenv = require('dotenv').config();
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config');
 
 const verifyToken = require('./Verify_Token')
-// const cookieParser = require('cookie-parser');
 const cookies = require('cookies')
-
 
 async function register(req, res, next) {
   console.log("received register request. About to process")

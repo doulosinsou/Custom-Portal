@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
-const router = express.Router();
 const path = require('path');
 
-// const query = require('./mysql.js');
 const authController = require('./Auth/Auth_controller');
 const verifyToken = require('./Auth/Verify_Token');
 const user = require('./User/user.js');
