@@ -38,7 +38,7 @@ async function isValid(req, res, next){
 }
 
 app.post('/register', authController.register, function (req,res,next){
-  console.log(req.data);
+  // console.log(req.data);
   res.redirect(301, '/');
 })
 
