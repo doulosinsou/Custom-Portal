@@ -2,20 +2,15 @@ var jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 
 function verifyToken(req,res,next){
-  let ismatch
-  if(!req.headers.cookie) {
-    ismatch = "";
-  }else{
-  match = req.headers.cookie.match(new RegExp('(^|)' + 'login' + '=([^;]+)'));
-      if(!match){
-        ismatch = "";
+  let token;
+    if(!req.headers.cookie){token = ""}else{
+      token = req.headers.cookie.match(new RegExp('(^|)' + 'login' + '=([^;]+)'));
+      if(!token){
+        req.err = {auth: false, message: 'No token provided.'};
+        next();
       }else{
-        ismatch = match[2];
-      }
-  }
-
-  const token = req.headers['x-access-token'] || ismatch;
-  if (!token) req.err = {auth: false, message: 'No token provided.'};
+        token = token[2];
+      }}
 
   jwt.verify(token, process.env.SECRET, async function(err, decoded) {
     if (err) {
@@ -27,6 +22,5 @@ function verifyToken(req,res,next){
   next()
   })
 }
-
 
 module.exports = verifyToken;
