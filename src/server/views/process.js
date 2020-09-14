@@ -1,30 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const app = express();
-const bodyParser = require('body-parser');
 const fs = require('fs');
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
 
 async function process(filePath, data, callback) {
-  // let header, footer;
-  // fs.readFile(__dirname+'/templates/header.ma', function (err, head){header =  head.toString()});
-  // fs.readFile(__dirname+'/templates/footer.ma', function (err, foot){footer = foot.toString()});
-
-  let header = await new Promise((resolve, reject) => {
-    fs.readFile(__dirname+'/templates/header.ma', function (err, head){
-      resolve(head);
-    })});
-  let footer = await new Promise((resolve, reject) => {
-    fs.readFile(__dirname+'/templates/footer.ma', function (err, foot){
-      resolve(foot)
-    })});
-
-  fs.readFile(filePath, function (err, content) {
-    if (err) return callback(err)
-
-    let rendered = header.toString()+content.toString()+footer.toString();
-    // let rendered = content.toString();
+    const header = __dirname+'/templates/header.ma';
+    const footer = __dirname+'/templates/footer.ma';
+    const main = filePath;
+    let rendered = await mashFiles([header, main, footer]);
     const reg = /\{\$.*?\$\}/gm;
     const marks = rendered.match(new RegExp(reg));
 
@@ -33,9 +13,18 @@ async function process(filePath, data, callback) {
       let raw = tag.substring(2,tag.length-2);
       rendered = rendered.replace(tag, data[raw]);
     }
-
     return callback(null, rendered);
-  });
 };
+
+async function mashFiles(files){
+  let filesArray='';
+  const readIt = await function(x){
+    return new Promise((resolve, reject)=>{
+      fs.readFile(x, function(err,html){
+      resolve(html.toString());
+  })})};
+  for (i=0;i<files.length; i++){filesArray += await readIt(files[i]);}
+  return filesArray;
+}
 
 module.exports = process

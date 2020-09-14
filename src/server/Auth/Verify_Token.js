@@ -15,9 +15,7 @@ function verifyToken(req,res,next){
       }else{
         ismatch = match[2];
       }
-  } 
-
-  // console.log(match[2]);
+  }
 
   const token = req.headers['x-access-token'] || ismatch;
   if (!token) req.err = {auth: false, message: 'No token provided.'};

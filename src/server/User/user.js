@@ -1,33 +1,29 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const bodyParser = require('body-parser');
-const fs = require('fs');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-
 const fetchData = require('../mysql');
-// const maViews = require('../views/process');
-
 
 let query;
 
-router.get('/', async function (req,res,next){
-  query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
-  const call = await fetchData(query);
-  const me = call[0];
-  me.backto = "";
-  me.title = "Portal Home";
-  res.render('index', me);
+router.get('/', myData, function (req,res){
+  req.me.backto = "";
+  req.me.title = "Portal Home";
+  res.render('index', req.me);
 });
 
-router.get('/user', async function (req,res,next){
+router.get('/user', myData, function (req,res){
+  req.me.backto = "/portal/";
+  req.me.title = "Account Settings";
+  res.render('user', req.me);
+});
+
+async function myData(req, res, next){
   query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
   const call = await fetchData(query);
-  const me = call[0];
-  me.backto = "/portal/";
-  me.title = "Account Settings";
-  res.render('user', me);
-});
+  req.me = call[0];
+  next();
+}
 
 module.exports = router;
