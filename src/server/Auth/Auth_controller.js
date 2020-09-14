@@ -9,41 +9,33 @@ const cookies = require('cookies')
 async function register(req, res, next) {
   console.log("received register request. About to process")
   const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-  const created = await createUser(
-    {
-    name : req.body.name,
-    email : req.body.email,
-    password : hashedPassword
-  })
 
-  async function createUser(submit){
+  const createUser = async (submit)=>{
     const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+submit.name+"')";
     const find = await fetchData(existsQuery);
     const exists = find[0][Object.keys(find[0])[0]];
     if (exists) return {nameExists:"Cannot use that Username"};
-    // return find;
 
     const columns = ["name", "email", "pass"];
     const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
     const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
     fetchData(newRow);
-    const newUser = await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
-
-    return newUser;
+    return await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
   }
 
+  const created = await createUser({
+    name : req.body.name,
+    email : req.body.email,
+    password : hashedPassword
+  })
 
-  if (!created) req.data = "There was a problem registering the user";
-
+  if (!created) return req.data = "There was a problem registering the user";
   req.data = created;
-  console.log("registered user")
-
+  console.log("registered user "+created.name);
   next()
-
   };
 
 async function login(req, res, next) {
-  // console.log("login function declared; about to find name in database")
   const query = "SELECT * FROM authentication WHERE name='"+req.body.name+"'";
   const find = await fetchData(query);
 
@@ -53,11 +45,8 @@ async function login(req, res, next) {
     res.status(401).send({auth: false, warning: "invalid username"});
     return;
   }
-  console.log("bcrypt returns: "+bcrypt.compareSync(req.body.password, find[0].pass));
 
-  const validPass = bcrypt.compareSync(req.body.password, find[0].pass);
-  if (!validPass)
-  {
+  if (!bcrypt.compareSync(req.body.password, find[0].pass)){
     console.log("bcrypt failed to match password");
     res.status(401).send({ auth: false, token: null });
   }else{
@@ -72,33 +61,13 @@ async function login(req, res, next) {
     httpOnly: false,
     path: '/',
     signed: false
-    // overwrite:true
   }
 
   const cooks = new cookies(req,res);
   cooks.set("login", token, dets);
-
-  // res.cookie("login", token, dets).send('cookie set');
-
   res.status(200).send({ auth: true, token: token });
-
   }
-
 };
-
-// router.get('/portal', verifyToken, async function(req,res,next){
-//     const query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
-//     const user = await fetchData(query);
-//     if (user.err) {
-//       return res.status(500).send("There was a problem finding the user.");
-//     }else{
-//       user[0].pass = "";
-//       user[0].ID = "";
-//       console.log(user[0].name+" is now logged in");
-//       res.status(200).send(user[0]);
-//   }
-// })
-
 
 exports.register = register;
 exports.login = login;
