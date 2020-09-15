@@ -31,7 +31,7 @@ async function register(req, res, next) {
 
   if (!created) return req.data = "There was a problem registering the user";
   req.data = created;
-  console.log("registered user "+created.name);
+  console.log("registered user "+created[0].name);
   next()
   };
 

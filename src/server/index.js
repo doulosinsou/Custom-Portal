@@ -18,10 +18,11 @@ const server = app.listen(port, ()=>{
 });
 
 app.use(express.static("./src/client"));
-app.use(express.static("./src/portal2"));
+// app.use(express.static("./src/portal2"));
 
 app.use('/', express.static("./src/client"));
-app.use('/portal', verifyToken, isValid, user, express.static('./src/portal2'));
+app.use('/portal', verifyToken, isValid, user);
+// , express.static('./src/portal2'));
 
 const maViews = require('./views/process');
 app.engine('ma', maViews);
