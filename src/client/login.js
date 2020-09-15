@@ -2,6 +2,7 @@ window.addEventListener("load", start)
 
 function start(){
 console.log("js connected");
+logCheck();
 document.getElementById("log").addEventListener("submit", login);
 }
 
@@ -51,5 +52,17 @@ function validate(userData, warning){
         return true;
       }
     }
+  }
+}
+
+async function logCheck(){
+  const check = await fetch('/port', {
+    method:'GET',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'}
+  });
+  const json = await check.json();
+  if (json.render){
+    window.location.href = json.render;
   }
 }

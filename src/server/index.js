@@ -12,7 +12,7 @@ const authController = require('./Auth_controller');
 const verifyToken = require('./Verify_Token');
 const user = require('./user.js');
 
-const port = "3081";
+const port = "3101";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
@@ -47,3 +47,12 @@ app.post('/register', authController.register, function (req,res,next){
 })
 
 app.post('/login', authController.login)
+app.get('/port', function(req, res){
+  console.log("/port called")
+  if (req.err){
+    res.send({warning: "not logged in"});
+    res.end();
+  }else{
+    res.status(200).send({render:"/portal/"});
+  }
+})
