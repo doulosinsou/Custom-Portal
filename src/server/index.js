@@ -12,17 +12,15 @@ const authController = require('./Auth_controller');
 const verifyToken = require('./Verify_Token');
 const user = require('./user.js');
 
-const port = "3071";
+const port = "3081";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
 
 app.use(express.static("./src/client"));
-// app.use(express.static("./src/portal2"));
 
 app.use('/', express.static("./src/client"));
 app.use('/portal', verifyToken, isValid, user);
-// , express.static('./src/portal2'));
 
 const maViews = require('./views/process');
 app.engine('ma', maViews);
