@@ -8,11 +8,11 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cors());
 
-const authController = require('./Auth/Auth_controller');
-const verifyToken = require('./Auth/Verify_Token');
-const user = require('./User/user.js');
+const authController = require('./Auth_controller');
+const verifyToken = require('./Verify_Token');
+const user = require('./user.js');
 
-const port = "3041";
+const port = "3071";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
