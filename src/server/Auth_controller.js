@@ -13,21 +13,24 @@ async function register(req, res, next) {
   const createUser = async (submit)=>{
     const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+submit.name+"')";
     const find = await fetchData(existsQuery);
-    const exists = find[0][Object.keys(find[0])[0]];
-    if (exists) return {nameExists:"Cannot use that Username"};
+    const exists = await find[0][Object.keys(find[0])[0]];
+    if (exists) {
+      res.send({nameExists:"Cannot use that Username"});
+      return 
+    };
 
     const columns = ["name", "email", "pass"];
     const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
     const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
     fetchData(newRow);
     return await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
-  }
+  };
 
   const created = await createUser({
     name : req.body.name,
     email : req.body.email,
     password : hashedPassword
-  })
+  });
 
   if (!created) return req.data = "There was a problem registering the user";
   req.data = created;

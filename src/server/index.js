@@ -33,7 +33,7 @@ async function isValid(req, res, next){
     console.log(req.err);
     if(req.originalUrl.match(RegExp(/\/portal/))){
       res.redirect(301, "/");
-    }else if (req.originalUrl === "/login"){
+    }else if (req.originalUrl === "/login" || req.originalUrl === "/register"){
       next();
     }
   }else{
@@ -43,7 +43,7 @@ async function isValid(req, res, next){
 
 app.post('/register', authController.register, function (req,res,next){
   console.log(req.data);
-  res.redirect(301, "/");
+  res.status(301).send({redirect: "/"});
 })
 
 app.post('/login', authController.login)
