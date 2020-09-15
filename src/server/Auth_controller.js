@@ -1,4 +1,4 @@
-const fetchData = require('../mysql')
+const fetchData = require('./mysql')
 const dotenv = require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -39,7 +39,10 @@ async function login(req, res, next) {
   const query = "SELECT * FROM authentication WHERE name='"+req.body.name+"'";
   const find = await fetchData(query);
 
-  if (find.err) res.status(500).send('Error on the server.');
+  if (find.err) {
+    res.status(500).send('Error on the server.');
+    return
+  }
 
   if (!find[0]) {
     res.status(401).send({auth: false, warning: "invalid username"});
