@@ -19,8 +19,9 @@ const server = app.listen(port, ()=>{
 
 app.use(express.static("./src/client"));
 
+app.use(verifyToken, isValid);
 app.use('/', express.static("./src/client"));
-app.use('/portal', verifyToken, isValid, user);
+app.use('/portal', user);
 
 const maViews = require('./views/process');
 app.engine('ma', maViews);
@@ -30,7 +31,11 @@ app.set('view engine', 'ma');
 async function isValid(req, res, next){
   if (req.err){
     console.log(req.err);
-    res.redirect(301, "/");
+    if(req.originalUrl.match(RegExp(/\/portal/))){
+      res.redirect(301, "/");
+    }else if (req.originalUrl === "/login"){
+      next();
+    }
   }else{
     next();
   }
@@ -38,16 +43,7 @@ async function isValid(req, res, next){
 
 app.post('/register', authController.register, function (req,res,next){
   console.log(req.data);
-  res.redirect(301, '/');
+  res.redirect(301, "/");
 })
 
 app.post('/login', authController.login)
-
-app.all('/port', verifyToken, function(req,res,next){
-  if (req.err){
-    console.log(req.err);
-    res.send(req.err);
-  }else{
-    res.send({redirect: "/portal"});
-  }
-})

@@ -35,7 +35,7 @@ async function login(){
   if (check.warning){
     document.getElementById('comment').innerHTML = check.warning;
   }else{
-    window.location.href = "/portal";
+    window.location.href = "/portal/";
   }
 }
 

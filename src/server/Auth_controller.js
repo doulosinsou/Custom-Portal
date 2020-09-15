@@ -68,7 +68,6 @@ async function login(req, res, next) {
 
   const cooks = new cookies(req,res);
   cooks.set("login", token, dets);
-  // res.location('/portal');
   res.status(200).send({message: "Logged in"});
   }
 };
