@@ -1,8 +1,12 @@
 window.addEventListener("load", start)
 
 function start(){
+document.getElementById('getmail').addEventListener("click", function(){
+  fetch('/mail');
+})
+
 console.log("js connected");
-logCheck();
+// logCheck();
 document.getElementById("log").addEventListener("submit", login);
 }
 

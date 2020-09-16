@@ -19,7 +19,7 @@ const server = app.listen(port, ()=>{
 
 app.use(express.static("./src/client"));
 
-app.use(verifyToken, isValid);
+// app.use(verifyToken, isValid);
 app.use('/', express.static("./src/client"));
 app.use('/portal', user);
 
@@ -56,3 +56,11 @@ app.get('/port', function(req, res){
     res.status(200).send({render:"/portal/"});
   }
 })
+
+
+const mailer = require('./mail/mail_handler')
+app.get('/mail', domail);
+
+function domail(){
+  mailer("luke@moyeraudio.com", "Test nodemailer", "notice");
+}
