@@ -5,22 +5,23 @@ const path = require('path');
 
 
 
-async function makeEmail(emailTo, emailSub, template, data){
+async function makeEmail(data){
   const transport = nodemailer.createTransport({
       host: "mail.moyeraudio.com",
       port: 465,
       auth: {
         user: process.env.EMAIL_USER,
-        pass: '"Reqk626rex,"'
+        pass: process.env.EMAIL_PASSWORD
       }
   });
 
+  const parsed = await parseText();
   const options = {
       from: '"Moyer Audio Quote App" <'+process.env.EMAIL_USER+'>',
-      to: emailTo,
-      subject: emailSub,
-      text: await parseText(template, "text"),
-      html: await parseText(template, "html"),
+      to: data.to,
+      subject: data.subject,
+      text: parsed.text,
+      html: parsed.html,
       attachments: [
         {
           filename: 'ma_logo_simple.png',
@@ -30,49 +31,63 @@ async function makeEmail(emailTo, emailSub, template, data){
       ]
   };
 
+
+  // const html = await parseText("html");
+
+
+
   transport.sendMail(options, (error, info) => {
           if (error) {
               return console.log(error);
           }
           console.log('Message sent');
   });
-}
 
-function parseText(template, type){
+
+function parseText(){
   return new Promise((resolve, reject)=>{
     fs.readFile(path.resolve(__dirname,'mail.ma'), (err, result)=>{
       if (err){console.log(err); return}
       let stringed = result.toString();
-      const typemail = findTag(stringed, template);
-      const content = findTag(typemail, type)
-      let fullEmail;
-      if (type==="text") {
-        fullEmail = content;
-      }else if (type === "html") {
-        const head = findTag(stringed, "header");
-        const foot = findTag(stringed, "footer");
-        fullEmail = head+content+foot;
-      }
-      resolve(fullEmail);
+      const head = findTag(stringed, "header");
+      const foot = findTag(stringed, "footer");
+      let content = findTag(stringed, data.template);
+
+      content = overWrite(content);
+
+      const text = findTag(content, "text");
+      const html = findTag(content, "html");
+
+      const fullhtml = head+html+foot;
+
+      resolve({text:text, html:fullhtml});
     })
   })
 }
 
-function findTag(data, tag){
+function findTag(string, tag){
   const reg = "<"+tag+">.*?[\\S\\s]*<\\/"+tag+">";
-  const found = data.match(reg).join(/\n/);
+  const found = string.match(reg).join(/\n/);
   openL = tag.length + 2;
   closeL = tag.length + 3;
   const content = found.substring(openL, found.length - closeL);
   return content;
 }
 
-function overWrite(){
+function overWrite(string){
+  const marks = string.match(new RegExp(/\{\$.*?\$\}/gm));
 
-
+  for (mark in marks){
+    let tag = marks[mark];
+    let raw= tag.substring(2, tag.length-2);
+    string = string.replace(tag, data.match[raw]);
+  }
+  return string;
 
 }
 
+
+}
 // makeEmail("luke@moyeraudio.com", "Test nodemailer", "notice");
 
 module.exports = makeEmail;

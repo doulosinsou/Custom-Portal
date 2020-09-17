@@ -62,5 +62,16 @@ const mailer = require('./mail/mail_handler')
 app.get('/mail', domail);
 
 function domail(){
-  mailer("luke@moyeraudio.com", "Test nodemailer", "notice");
+  const options = {
+    to: "luke@moyeraudio.com",
+    subject: "Test nodemailer",
+    template: "notice",
+    match: {
+      company: "Moyer Audio",
+      sendout: "Good evening. This message is to test if the replacement strategy functions in my custom email templates. Please accept this test as evidence that something worked.",
+      signed: "Regards, Luke, M"
+    }
+
+  }
+  mailer(options);
 }
