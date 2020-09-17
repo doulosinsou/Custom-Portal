@@ -19,7 +19,7 @@ const server = app.listen(port, ()=>{
 
 app.use(express.static("./src/client"));
 
-// app.use(verifyToken, isValid);
+app.use(verifyToken, isValid);
 app.use('/', express.static("./src/client"));
 app.use('/portal', user);
 

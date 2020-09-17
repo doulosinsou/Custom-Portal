@@ -8,36 +8,70 @@ const cookies = require('cookies')
 
 async function register(req, res, next) {
   console.log("received register request. About to process")
-  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
 
-  const createUser = async (submit)=>{
-    const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+submit.name+"')";
-    const find = await fetchData(existsQuery);
-    const exists = await find[0][Object.keys(find[0])[0]];
-    if (exists) {
-      res.send({nameExists:"Cannot use that Username"});
-      return 
-    };
+  const verifyCode = function(){
+    const num = Math.floor((Math.random()*1000000)+1);
+    console.log("random number is: "+num)
+    let str = ''+num;
+    while (str.length < 6){
+      str = '0'+str;
+    }
+    return str;
+  }
 
-    const columns = ["name", "email", "pass"];
-    const rows = ["'"+submit.name+"'", "'"+submit.email+"'", "'"+submit.password+"'"];
-    const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
-    fetchData(newRow);
-    return await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
-  };
-
+//pass parameters of req data to above function
   const created = await createUser({
     name : req.body.name,
     email : req.body.email,
-    password : hashedPassword
+    pass : hashedPassword,
+    token: verifyCode(),
+    active: false,
   });
 
+//call the created const
   if (!created) return req.data = "There was a problem registering the user";
+  if (created.nameExists) return res.status(401).send(created);
   req.data = created;
-  console.log("registered user "+created[0].name);
-  next()
-  };
+  console.log(created);
+  // console.log("registered user "+created[0].name);
+  // next()
+};
 
+//helper to actually make new mysql table row
+async function createUser(submit){
+  if (!exists(submit.name)) {
+    console.log("submition name exists")
+    return {nameExists:"Cannot use that Username"};
+  }
+  //build the row based on parameters of the object passed to it
+  let columns =[];
+  let rows = [];
+  for (param in submit){
+    const value = submit[param];
+    columns.push(param);
+    rows.push("'"+value+"'");
+  }
+
+  const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
+  fetchData(newRow);
+  return await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
+};
+
+//helper function for if something already exists on the table
+async function exists(something){
+  const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+something+"')";
+  const find = await fetchData(existsQuery);
+  return await find[0][Object.keys(find[0])[0]];
+}
+
+
+
+
+
+
+
+// new process
 async function login(req, res, next) {
   const query = "SELECT * FROM authentication WHERE name='"+req.body.name+"'";
   const find = await fetchData(query);

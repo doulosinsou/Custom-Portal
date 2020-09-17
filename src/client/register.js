@@ -11,7 +11,8 @@ async function register(){
   const userData = {
     name: form.name.value,
     email: form.email.value,
-    password: form.pass.value,
+    pass: form.pass.value,
+    verification: form.verify
   };
   const valid = validate(userData, "warning");
   if (!valid) throw "invalid entry";
