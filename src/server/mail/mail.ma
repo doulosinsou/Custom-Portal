@@ -72,6 +72,11 @@
     <p>{$signed$}</p>
   </html>
   <text>
-  Notice from {$company$} via Moyer Audio Quote App \r\n {$sendout$} \r\n {$signed$}
+  Notice from {$company$}
+  via Moyer Audio Quote App
+
+  {$sendout$}
+
+  {$signed$}
   </text>
 </notice>
