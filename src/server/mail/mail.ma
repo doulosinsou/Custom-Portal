@@ -37,16 +37,24 @@
     <h1>Thank you for Registering</h1>
     <p>A request to register for the <b>Moyer Audio Quote App</b> has been received.</p>
     <br>
-    <p>To activate your account, please follow the link below, then you may log in on the <a href="link">login page</a></p>
+    <p>To activate your account and login, please follow the link below</p>
     <br>
-    <a href = "{$activate$}">Activate your account</a>
-    <br>
+    <a href = "{$activate$}">Activate your account and login</a>
+    <br><br>
     <i>If you did not register to the Moyer Audio Quote App, please disregard and tighten access to your email in the future.</i>
     <br>
     <p>Regards, MOYER AUDIO</p>
   </html>
   <text>
-      Thank you for Registering. \r\n A request to register for the Moyer Audio Quote App has been received.\r\n To activate your account, please follow the link below, then you may log in on the login page. \r\n Activate your account here: {$activate$} \r\n \r\n If you did not register to the Moyer Audio Quote App, please disregard and tighten access to your email in the future. /r/n/r/n Regards, MOYER AUDIO
+      Thank you for Registering.
+
+      A request to register for the Moyer Audio Quote App has been received. To activate your account, please follow the link below, then you may log in on the login page.
+
+      Activate your account here: {$activate$}
+
+      If you did not register to the Moyer Audio Quote App, please disregard and tighten access to your email in the future.
+
+      Regards, MOYER AUDIO
   </text>
 </register>
 

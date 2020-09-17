@@ -16,7 +16,7 @@ async function register(){
   };
   const valid = validate(userData, "warning");
   if (!valid) throw "invalid entry";
-  const check = await postIt('/register', userData);
+  const check = await postIt('/register/request', userData);
 
   if (check.nameExists){
     validate(check, "warning");
