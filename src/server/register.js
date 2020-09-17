@@ -14,18 +14,18 @@ router.post('/request', register, function (req,res,next){
     subject: "Verify Account",
     template: "register",
     match: {
-      activate: "http://localhost:3101/register/"+req.data.token
+      activate: "http://localhost:3101/register/verify/"+req.data.token
     }
   }
   mailer(options);
   res.status(301).send({redirect: "/"});
 })
 
-router.get('/:verify', function(req,res){
-  console.log(req.params.verify);
+router.get('/verify/:verify', function(req,res){
+  // console.log(req.params.verify);
   const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.verify+"'";
   fetchData(update);
-  res.redirect(301, '/');
+  res.redirect(301, '/activated');
 })
 
 

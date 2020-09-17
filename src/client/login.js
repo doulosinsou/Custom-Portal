@@ -1,12 +1,8 @@
 window.addEventListener("load", start)
 
 function start(){
-document.getElementById('getmail').addEventListener("click", function(){
-  fetch('/mail');
-})
-
 console.log("js connected");
-// logCheck();
+status();
 document.getElementById("log").addEventListener("submit", login);
 }
 
@@ -68,5 +64,13 @@ async function logCheck(){
   const json = await check.json();
   if (json.render){
     window.location.href = json.render;
+  }
+}
+
+function status(){
+  const status = window.location.pathname;
+  console.log(status);
+  if(status === "/activated"){
+    document.getElementById('comment').innerHTML = "Your account has been activated";
   }
 }

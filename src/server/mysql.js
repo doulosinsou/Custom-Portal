@@ -13,8 +13,8 @@ const allMysql = async function (query){
   return new Promise(function(resolve, reject){
       pool.query(query, function(err, result){
         if (err) resolve({err:err})
-        console.log(query);
-        console.log(result);
+        // console.log(query);
+        // console.log(result);
         resolve(result);
       });
     });
