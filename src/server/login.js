@@ -30,7 +30,7 @@ async function login(req, res, next) {
     res.status(401).send({ auth: false, token: null, warning:"invalid password"});
   }else{
   const token = jwt.sign({id: find[0].ID}, process.env.SECRET, {
-    expiresIn: 86400 // expires in 24 hours
+    expiresIn: 86400*7 // expires in 24 hours
   });
   console.log(find[0].name+" has just logged in");
   const sixmo = 1000*60*60*24*30*6; //mill*sec*min*hours*days*months
