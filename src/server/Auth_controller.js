@@ -80,6 +80,11 @@ async function login(req, res, next) {
     return;
   }
 
+  if (!find[0].active) {
+    res.status(401).send({auth: false, warning: "Your account is set to inactive. To activate, click on the link from your registration verification email or inquire of your portal administrator"});
+    return;
+  }
+
   if (!bcrypt.compareSync(req.body.password, find[0].pass)){
     console.log("bcrypt failed to match password");
     res.status(401).send({ auth: false, token: null, warning:"invalid password"});

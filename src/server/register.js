@@ -9,6 +9,7 @@ const mailer = require('./mail/mail_handler');
 
 router.post('/request', register, function (req,res,next){
   console.log(req.data);
+
   const options = {
     to: req.data.email,
     subject: "Verify Account",
