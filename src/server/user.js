@@ -28,6 +28,7 @@ async function myData(req, res, next){
   const query = "SELECT * FROM authentication WHERE ID='"+req.userId+"'";
   const call = await fetchData(query);
   req.me = call[0];
+  req.me.phone = JSON.parse(call[0].phone);
 
   next();
 }
