@@ -22,8 +22,9 @@ router.post('/request', register, function (req,res,next){
   res.status(301).send({redirect: "/"});
 })
 
-router.get('/verify/:verify', function(req,res){
+router.get('/verify/:verify', async function(req,res){
   // console.log(req.params.verify);
+
   const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.verify+"'";
   fetchData(update);
   res.redirect(301, '/activated');
@@ -35,6 +36,9 @@ async function register(req, res, next) {
 
   const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
 
+  const now = new Date().setHours(new Date().getHours() - 5);
+  const newtime = new Date(now).toISOString().slice(0, 19).replace('T', ' ');
+
   const verifyCode = function(){
     const num = Math.floor((Math.random()*1000000)+1);
     console.log("random number is: "+num)
@@ -42,7 +46,9 @@ async function register(req, res, next) {
     while (str.length < 6){
       str = '0'+str;
     }
-    return str;
+
+    const hashedVerify = bycrypt.hashSync(str, 8);
+    return hashedVerify;
   }
 
 //pass parameters of req data to above function
@@ -52,6 +58,7 @@ async function register(req, res, next) {
     pass : hashedPassword,
     token: verifyCode(),
     active: false,
+    signup: newtime
   });
 
 //call the created const

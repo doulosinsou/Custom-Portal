@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use(cors());
 
-const authController = require('./Auth_controller');
+const login = require('./login');
 const verifyToken = require('./Verify_Token');
 const user = require('./user.js');
 const registration = require('./register')
@@ -46,23 +46,7 @@ async function isValid(req, res, next){
   }
 }
 
-// app.post('/register', authController.register, function (req,res,next){
-//   console.log(req.data);
-//
-//   const options = {
-//     to: req.data.email,
-//     subject: "Verify Account",
-//     template: "register",
-//     match: {
-//       activate: "localhost:"+port+""
-//     }
-//
-//   }
-//
-//   res.status(301).send({redirect: "/"});
-// })
-
-app.post('/login', authController.login)
+app.post('/login', login)
 app.get('/port', function(req, res){
   console.log("/port called")
   if (req.err){
