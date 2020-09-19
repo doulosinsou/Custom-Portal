@@ -2,6 +2,7 @@ window.addEventListener("load", start)
 
 function start(){
 console.log("js connected");
+logCheck();
 status();
 document.getElementById("log").addEventListener("submit", login);
 }

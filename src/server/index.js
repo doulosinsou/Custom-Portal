@@ -13,11 +13,12 @@ const verifyToken = require('./Verify_Token');
 const user = require('./user.js');
 const registration = require('./register')
 
-const port = "3101";
+const port = "3111";
 const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
 
+// app.use(verifyToken, isValid);
 app.use(express.static("./src/client"));
 
 app.use(verifyToken, isValid);
