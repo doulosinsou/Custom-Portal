@@ -10,6 +10,7 @@
       <p>Address: {$notexists$}</p>
       <p>Phone: {$phone.base$}</p>
       <p>Ext: {$phone.ext$}</p>
+      <p>Personal Cell: {$phone.personal.cell$}</p>
 
       <h3>Login Settings</h3>
       <p>Reset password </p>

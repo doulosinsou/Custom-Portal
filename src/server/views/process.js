@@ -11,6 +11,28 @@ async function process(filePath, data, callback) {
       rendered = wipeAdmin(rendered);
     }
 
+    //______________________________________
+
+      // const tstr = "sample.first.second.third";
+      // const tdat = {
+      //   sample: {
+      //     first:{
+      //       second:{
+      //         third: "here I am"
+      //       }
+      //     }
+      //   }
+      // };
+      // const nstr = tstr.split(".");
+      // let stuff = tdat;
+      // for (parameter in nstr){
+      //   stuff = stuff[nstr[parameter]];
+      // }
+      // console.log(stuff);
+
+    //______________________________________
+
+
     // const reg = /\{\$.*?\$\}/gm;
     // const marks = rendered.match(new RegExp(reg));
     //
@@ -35,27 +57,51 @@ async function process(filePath, data, callback) {
       for (mark in marks){
         let tag = marks[mark];
         let raw= tag.substring(2, tag.length-2);
+
         const split = raw.split(".");
-        let datacycle = "data";
+
+        let stuff = data;
         for (subitem in split){
-          datacycle= datacycle+"['"+split[subitem]+"']";
+          stuff = stuff[split[subitem]];
         }
-
-        console.log(data.phone.base);
-
-
-        if (data[raw] == undefined){
-          // console.log(tag+" does not exist in req data")
-          textstring= textstring.replace(tag,"");
-        }else{
-          // textstring = textstring.replace(tag, data[raw]);
-          textstring = textstring.replace(tag, datacycle);
-
-        }
+        // console.log(stuff);
+        textstring = textstring.replace(tag, stuff);
+        
+        // this works!!!!
+        // if (split[1]){
+        //   textstring = textstring.replace(tag, data[split[0]][split[1]]);
+        // }else{
+        //   textstring = textstring.replace(tag, data[split[0]]);
+        // }
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
+        // let datacycle
+        // for (subitem in split){
+        //   datacyle = datacycle + data[split[subitem]];
+          // textstring = textstring.replace(tag, data[split]);
+
+        // }
+
+
+        //   if (subitem !== 0){
+        //     textstring = textstring.replace(tag, data[split][subitem]);
+        //     console.log("data[split][subitem] is: "+data[split][subitem]);
+        //   }
+        //
+        //   // console.log(split);
+        // }
+        //
+        // // textstring = textstring.replace(tag, datacycle);
+        // // if (data[raw] == undefined){
+        //   // console.log(tag+" does not exist in req data")
+        //   // textstring= textstring.replace(tag,"");
+        // }else{
+        //   // textstring = textstring.replace(tag, data[raw]);
+        //   // textstring = textstring.replace(tag, datacycle);
+        // }
       }
-      console.log(data.phone)
+      console.log("data['phone']['base'] is: "+data['phone']['base'])
       return textstring;
     }
 
