@@ -2,13 +2,22 @@ window.addEventListener("load", start);
 
 function start(){
 
-document.getElementById("personal").addEventListener(
-"click", personal)
+document.getElementById("personal_form").addEventListener(
+"submit", personal)
 }
 
 async function personal(){
+  event.preventDefault();
   const form = document.getElementById('personal_form');
-  const sent = await submit('/portal/personal', form);
+  const formdata = new FormData(form);
+  let sendInfo = {};
+  for (value of formdata){
+    sendInfo[value[0]]=value[1];
+  }
+
+  console.log(sendInfo);
+
+  const sent = await submit('/portal/personal', sendInfo);
   const message = document.getElementById('personal_message');
   message.innerHTML = sent.message;
   message.classList.add(sent.class);
