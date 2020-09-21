@@ -22,20 +22,7 @@ router.get('/user', function (req,res){
 });
 
 router.post('/personal', function(req,res){
-
-  testData(req, res);
-
-
-  // console.log(req.body);
-  // let update = "UPDATE authentication SET ";
-  // for (item in req.body){
-  //   update = update + item+"='"+req.body[item]+"', ";
-  //
-  //   //PHONE DATA IS JSON OBJECT, NEEDS PARSED SEPARATELY
-  // }
-  // update = update.substring(0,update.length-2) + " WHERE ID='"+req.userId+"'";
-  // console.log(update);
-  // fetchData.allsql(update);
+  fetchData.update(req.body, "ID", req.userId);
 });
 
 
@@ -59,15 +46,7 @@ async function myData(req, res, next){
 }
 
 async function testData(req,res,next){
-  const obj = {
-    name: "Luke",
-    phone: {
-      personal: {
-        cell: "666-6666"
-      }
-    }
-  }
-  fetchData.update(obj, "ID", req.userId);
+  console.log(req.body)
   // next()
 }
 
