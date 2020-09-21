@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 const fetchData = require('./mysql');
+const bcrypt = require('bcryptjs');
 
 router.use(myData);
 
@@ -25,6 +26,17 @@ router.post('/personal', function(req,res){
   fetchData.update(req.body, "ID", req.userId);
 });
 
+router.post('/passreset', async function(req,res){
+  const find = await fetchData.find("ID", req.userId);
+  if (!bcrypt.compareSync(req.body.oldPass, find[0].pass)){
+    console.log("bcrypt failed to match password");
+    res.status(401).send({alert:"The old password is incorrect"});
+  }else{
+    const hashedPassword = bcrypt.hashSync(req.body.newPass, 8);
+    fetchData.update(hashedPassword, "ID", req.userId);
+    console.log("resetting password for user "+find[0].name)
+  }
+})
 
 
 
