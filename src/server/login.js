@@ -7,8 +7,7 @@ const verifyToken = require('./Verify_Token')
 const cookies = require('cookies')
 
 async function login(req, res, next) {
-  const query = "SELECT * FROM authentication WHERE name='"+req.body.name+"'";
-  const find = await fetchData(query);
+  const find = await fetchData.find("name", req.body.name);
 
   if (find.err) {
     res.status(500).send('Error on the server.');

@@ -8,7 +8,7 @@
 
   <link href="/css/main.css" rel="stylesheet">
 
-  <script src="/js/account.js"></script>
+  <script src="/js/{$js$}.js"></script>
 
 </head>
 <body>

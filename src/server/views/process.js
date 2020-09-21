@@ -15,9 +15,14 @@ async function process(filePath, data, callback) {
 
     function wipeAdmin(string){
       const reg = "<admin>.*?[\\S\\s]*<\\/admin>";
+      if(string.match(reg)){
       const match = string.match(reg).join(/\n/);
       const wiped = string.replace(match, "");
       return wiped;
+    }else{
+      return string;
+    }
+
     }
 
     function overWrite(input){
@@ -30,7 +35,14 @@ async function process(filePath, data, callback) {
         const split = raw.split(".");
         let datacopy = data;
         for (subitem in split){
-          datacopy = datacopy[split[subitem]];
+          // if(datacopy[split[subitem]] == null){
+            try{
+            datacopy = datacopy[split[subitem]];
+          }catch(e){
+
+          // }else{
+            datacopy = undefined;
+          }
         }
         if (datacopy == undefined){
           console.log(tag+" does not exist in req data")

@@ -26,7 +26,7 @@ router.get('/verify/:verify', async function(req,res){
   // console.log(req.params.verify);
 
   const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.verify+"'";
-  fetchData(update);
+  fetchData.allsql(update);
   res.redirect(301, '/activated');
 })
 
@@ -86,14 +86,14 @@ async function createUser(submit){
   }
 
   const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
-  fetchData(newRow);
-  return await fetchData("SELECT * FROM authentication WHERE name='"+submit.name+"'");
+  fetchData.allsql(newRow);
+  return await fetchData.find("name", submit.name);
 };
 
 //helper function for if something already exists on the table
 async function exists(something){
   const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+something+"')";
-  const find = await fetchData(existsQuery);
+  const find = await fetchData.allsql(existsQuery);
   return await find[0][Object.keys(find[0])[0]];
 }
 
