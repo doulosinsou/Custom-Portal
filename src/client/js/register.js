@@ -14,12 +14,15 @@ async function register(){
     pass: form.pass.value,
     verification: form.verify
   };
-  const valid = validate(userData, "warning");
-  if (!valid) throw "invalid entry";
+  const valid = await vali(userData, "warning");
+  console.log(valid)
+  if (!valid){
+    return "invalid entry";
+  }
   const check = await postIt('/register/request', userData);
 
   if (check.nameExists){
-    validate(check, "warning");
+    vali(check, "warning");
   }else{
     window.location.href = check.redirect;
   }
@@ -41,17 +44,18 @@ const postIt = async (url = '', data = {})=>{
   }
 };
 
-function validate(userData, warning){
+async function vali(userData, warning){
   const warn = document.getElementById(warning);
   if (userData.nameExists){
     warn.innerHTML = userData.nameExists;
+    return false
   }else{
-    for (data in userData){
-      if (!userData[data]) {
-        warning.innerHTML = warning.innerHTML + "<br> Please enter "+userData[data]
-      }else{
-        return true;
-      }
+    const isValid = await validate(userData.pass);
+    if(isValid.alert){
+      warn.innerHTML = isValid.alert;
+      return false;
+    }else{
+    return true;
     }
   }
 }

@@ -8,7 +8,8 @@
 
   <link href="main.css" rel="stylesheet">
 
-  <script src="register.js"></script>
+  <script src="/js/register.js"></script>
+  <script src="/js/validate.js"></script>
 
 </head>
 <body>
@@ -21,13 +22,13 @@
       <p id="comment"></p>
       <form id = "auth">
         <label for="name">Administrative UserName</label>
-        <input type="text" name="name">
+        <input type="text" name="name" pattern="([a-zA-Z]+ ?){6,32}" required>
         <label for="email">email</label>
-        <input type="email" name="email">
+        <input type="email" name="email" required>
         <label for="pass">password</label>
-        <input type="text" name="pass">
+        <input type="password" name="pass" required>
         <label for="verify">Verification Code</label>
-        <input type="number" name="verify">
+        <input type="number" name="verify" required>
         <button id="sub">Register</button>
       </form>
       <p id="warning"></p>

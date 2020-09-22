@@ -11,14 +11,15 @@ router.use(myData);
 router.get('/', function (req,res){
   req.me.backto = "";
   req.me.title = "Portal Home";
-  req.me.js = "main";
+  req.me.js = "main.js";
   res.render('index', req.me);
 });
 
 router.get('/user', function (req,res){
   req.me.backto = "/portal/";
   req.me.title = "Account Settings";
-  req.me.js = "account";
+  req.me.js = "account.js";
+  req.me.validatejs = "validate.js"
   res.render('user', req.me);
 });
 
@@ -28,13 +29,15 @@ router.post('/personal', function(req,res){
 
 router.post('/passreset', async function(req,res){
   const find = await fetchData.find("ID", req.userId);
+  console.log(req.body.oldPass)
   if (!bcrypt.compareSync(req.body.oldPass, find[0].pass)){
     console.log("bcrypt failed to match password");
     res.status(401).send({alert:"The old password is incorrect"});
   }else{
     const hashedPassword = bcrypt.hashSync(req.body.newPass, 8);
-    fetchData.update(hashedPassword, "ID", req.userId);
+    fetchData.update({pass:hashedPassword}, "ID", req.userId);
     console.log("resetting password for user "+find[0].name)
+    res.status(200).send({success: "successful password reset"})
   }
 })
 

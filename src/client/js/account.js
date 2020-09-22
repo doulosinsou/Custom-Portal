@@ -51,28 +51,30 @@ async function resetPass(){
   const confirm = document.getElementById("confirm_pass").value
   const alert = document.getElementById('pass_alert');
 
-  console.log("working?");
   const isValid = await validate(newpass);
-  if(!isValid.valid){
-    alert.innerHTML = isValid.alert;
 
+  if(isValid.alert){
+    alert.innerHTML = isValid.alert;
+    return
   }
-return
+
   if (newpass !== confirm){
     alert.innerHTML = "New Password and confirm password do not match";
-    return;
   }
 
   const send = {
     oldPass: oldpass,
     newPass: newpass
   }
-  // const attempt = await submit("/portal/passreset", send);
-  // if (attempt.alert){
-  //   alert.innerHTML = attempt.alert;
-  // }else{
-  //   window.location.href = "/";
-  // }
+  console.log(send)
+
+  const attempt = await submit("/portal/passreset", send);
+  if (attempt.alert){
+    alert.innerHTML = attempt.alert;
+  }else{
+    document.cookie = "login=''; max-age=0; SameSite=Strict; path=/";
+    window.location.href = "/";
+  }
 
 }
 
@@ -90,16 +92,3 @@ const submit = async (url = '', data = {})=>{
     console.log(error);
   }
 };
-
-async function validate(password){
-  if (!password.match(/(?=.*[0-9])/)) return {valid:false, alert:"Please use at least one numerical digit"};
-
-  if (!password.match(/(?=.*[a-z])/)) return {valid:false, alert:"Please use at least one lowercase letter"};
-
-  if (!password.match(/(?=.*[A-Z])/)) return {valid:false, alert:"Please use at least one uppercase letter"};
-
-  // if (!password.match(/(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\])/)) return {valid:false, alert:"Please use at least one special character"};
-  
-  if (!password.match(/(.{8,32})/)) return {valid:false, alert:"Please use between 8 and 32 characters"};
-  return true
-}

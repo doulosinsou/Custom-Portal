@@ -8,7 +8,8 @@
 
   <link href="/css/main.css" rel="stylesheet">
 
-  <script src="/js/{$js$}.js"></script>
+  <script src="/js/{$js$}"></script>
+  <script src="/js/{$validatejs$}"></script>
 
 </head>
 <body>
