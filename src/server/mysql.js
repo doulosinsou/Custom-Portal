@@ -34,12 +34,6 @@ const findsomething = async function (cond, val){
 const updatesomething = async function (change, cond, val){
   return new Promise(async function(resolve, reject){
 
-// const isJson = (str)=>{
-//   try{JSON.parse(str)}
-//   catch(err){return false}
-//   return true
-// }
-
     let upstr = ""
     for (key in change){
       const curr = change[key]
