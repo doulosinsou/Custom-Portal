@@ -18,7 +18,6 @@ const server = app.listen(port, ()=>{
   console.log("server started on "+port);
 });
 
-// app.use(verifyToken, isValid);
 app.use(express.static("./src/client"));
 
 app.use(verifyToken, isValid);
@@ -58,7 +57,6 @@ app.get('/port', function(req, res){
     res.status(200).send({render:"/portal/"});
   }
 })
-
 
 const mailer = require('./mail/mail_handler')
 app.get('/mail', domail);

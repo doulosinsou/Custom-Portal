@@ -47,5 +47,4 @@ async function login(req, res, next) {
   }
 };
 
-// exports.register = register;
 module.exports = login;

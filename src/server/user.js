@@ -49,7 +49,6 @@ async function myData(req, res, next){
   const now = new Date().setHours(new Date().getHours() - 5);
   const newtime = new Date(now).toISOString().slice(0, 19).replace('T', ' ');
   const logTime = "UPDATE authentication SET lastactive='"+newtime+"' WHERE ID='"+req.userId+"'";
-  // console.log(logTime);
   fetchData.allsql(logTime);
 
   //get info
