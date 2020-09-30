@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Set Password</title>
+
+  <link href="main.css" rel="stylesheet">
+
+  <script src="/js/register.js"></script>
+  <script src="/js/validate.js"></script>
+
+</head>
+<body>
+  <header>
+    <h1>Moyer Audio app</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Set New Password</h2>
+      <p id="comment"></p>
+      <form id = "reset" Method="POST">
+        <label for="new_pass">New Password</label>
+          <input type="password" name="new_pass" id="new_pass">
+        <label for="confirm_pass">Confirm new Password</label>
+          <input type="password" name="confirm_pass" id="confirm_pass">
+        <p class="hidden" id="pass_suggestions">Secure passwords must have:<br>
+          <ul>
+            <li>At least one numerical digit (1-9)</li>
+            <li>At least one lowercase letter (a-z)</li>
+            <li>At least one uppercase letter (A-Z)</li>
+            <li>At least one special character (like: !," etc)</li>
+            <li>Between 8 and 32 characters in length</li>
+          </ul>
+        </p>
+        <p id="pass_alert"></p>
+        <button type="submit">Change Password</button>
+        <p>Changing password will take you to the login screen to re-login with the new password</p>
+      </form>
+      <p id="warning"></p>
+    </section>
+  </main>
+  <footer>
+    <p>Luke Moyer 2020</p>
+  </footer>
+</body>
+</html>

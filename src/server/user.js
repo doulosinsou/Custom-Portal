@@ -29,7 +29,6 @@ router.post('/personal', function(req,res){
 
 router.post('/passreset', async function(req,res){
   const find = await fetchData.find("ID", req.userId);
-  console.log(req.body.oldPass)
   if (!bcrypt.compareSync(req.body.oldPass, find[0].pass)){
     console.log("bcrypt failed to match password");
     res.status(401).send({alert:"The old password is incorrect"});
@@ -39,7 +38,7 @@ router.post('/passreset', async function(req,res){
     console.log("resetting password for user "+find[0].name)
     res.status(200).send({success: "successful password reset"})
   }
-})
+});
 
 
 

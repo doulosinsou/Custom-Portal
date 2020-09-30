@@ -5,6 +5,7 @@ console.log("js connected");
 logCheck();
 status();
 document.getElementById("log").addEventListener("submit", login);
+document.getElementById("reset").addEventListener("submit", reset);
 }
 
 const postIt = async (url = '', data = {})=>{
@@ -75,3 +76,16 @@ function status(){
     document.getElementById('comment').innerHTML = "Your account has been activated";
   }
 }
+
+async function reset(){
+  event.preventDefault();
+  const notice = document.getElementById('notice')
+  const send = await postIt('/register/verify', {email: document.getElementById('reset').email.value});
+
+  if (send.noEmail){
+    notice.innerHTML = send.noEmail;
+  }else{
+    notice.innerHTML = "Please follow link in email to reset Password";
+    document.getElementById('reset').email.value = "";
+  }
+};

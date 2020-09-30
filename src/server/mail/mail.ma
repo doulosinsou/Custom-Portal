@@ -59,16 +59,27 @@
 </register>
 
 <passreset>
-  <h1>Reset Your Password</h1>
-  <p>A request to reset your account password on <b>Moyer Audio Quote App</b> has been received.</p>
-  <br>
-  <p>To reset your password, please follow the link below, then you may log in on the <a href="link">login page</a></p>
-  <br>
-  <a href = "{$reset$}">Reset your password</a>
-  <br>
-  <i>If you did not request to reset your password on the Moyer Audio Quote App, please disregard and tighten access to your account in the future.</i>
-  <br>
-  <p>Regards, MOYER AUDIO</p>
+  <html>
+    <h1>Reset Your Password</h1>
+    <p>A request to reset your account password on <b>Moyer Audio Quote App</b> has been received.</p>
+    <br>
+    <a href = "{$reset$}">Reset your password and log in</a>
+    <br>
+    <i>If you did not request to reset your password on the Moyer Audio Quote App, please disregard and tighten access to your account in the future.</i>
+    <br>
+    <p>Regards, MOYER AUDIO</p>
+  </html>
+  <text>
+    Reset Your password
+
+    A request to reset your account password on Moyer Audio Quote App has been received.
+
+    Reset your password and log in here: {$reset$}
+
+    If you did not request to reset your password on the Moyer Audio Quote App, please disregard and tighten access to your account in the future.
+
+    Regards, MOYER AUDIO
+  </text>
 </passreset>
 
 <notice>

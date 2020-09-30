@@ -3,6 +3,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const fetchData = require('./mysql')
 const mailer = require('./mail/mail_handler');
@@ -15,20 +16,55 @@ router.post('/request', register, function (req,res,next){
     subject: "Verify Account",
     template: "register",
     match: {
-      activate: "http://localhost:3111/register/verify/"+req.data.token
+      activate: "http://localhost:3111/register/reset/?token="+req.data.token
     }
   }
   mailer(options);
   res.status(301).send({redirect: "/"});
 })
 
-router.get('/verify/:verify', async function(req,res){
-  // console.log(req.params.verify);
-
-  const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.verify+"'";
-  fetchData.allsql(update);
-  res.redirect(301, '/activated');
+router.get('/reset', function(req,res){
+  res.sendFile(path.resolve("src/client/reset.html"));
 })
+
+router.post('/verify', async function(req,res){
+  const email = req.body.email
+  const exi = await exists("email", "email", email);
+  if (!exi){
+    res.status(401).send({noEmail: "Cannot find account with this email"});
+    return
+  }
+
+  const token = verifyCode();
+  fetchData.update({token:token}, "email", email);
+
+  const options = {
+    to: email,
+    subject: "Verify Account",
+    template: "passreset",
+    match: {
+      reset: "http://localhost:3111/register/reset/?token="+token
+    }
+  }
+  mailer(options);
+  // res.status(301).send({redirect: "/"});
+});
+
+router.post('/newPass', async function(req,res){
+  // console.log(req.params.token);
+
+  const find = await fetchData.find("token", req.body.token);
+  // console.log(req.body.token);
+  // return
+  const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
+  fetchData.update({pass:hashedPassword}, "token", req.body.token);
+  console.log("resetting password for user "+find[0].name);
+  // res.status(200).send({success: "successful password reset"})
+  const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.token+"'";
+  fetchData.allsql(update);
+  res.status(301).send({redirect:'/activated'});
+})
+
 
 
 async function register(req, res, next) {
@@ -39,23 +75,11 @@ async function register(req, res, next) {
   const now = new Date().setHours(new Date().getHours() - 5);
   const newtime = new Date(now).toISOString().slice(0, 19).replace('T', ' ');
 
-  const verifyCode = function(){
-    const num = Math.floor((Math.random()*1000000)+1);
-    console.log("random number is: "+num)
-    let str = ''+num;
-    while (str.length < 6){
-      str = '0'+str;
-    }
-
-    const hashedVerify = bycrypt.hashSync(str, 8);
-    return hashedVerify;
-  }
-
 //pass parameters of req data to above function
   const created = await createUser({
     name : req.body.name,
     email : req.body.email,
-    pass : hashedPassword,
+    // pass : hashedPassword,
     token: verifyCode(),
     active: false,
     signup: newtime
@@ -69,10 +93,22 @@ async function register(req, res, next) {
   next()
 };
 
+// helper to assign randomized token
+function verifyCode(){
+  const num = Math.floor((Math.random()*1000000)+1);
+  console.log("random number is: "+num)
+  let str = ''+num;
+  while (str.length < 6){
+    str = '0'+str;
+  }
+  const hashedVerify = bcrypt.hashSync(str, 8);
+  return hashedVerify;
+}
+
 //helper to actually make new mysql table row
 async function createUser(submit){
-  if (await exists(submit.name)) {
-    console.log(exists(submit.name));
+  if (await exists("name", "name", submit.name)) {
+    // console.log(exists(submit.name));
     console.log("submition name exists")
     return {nameExists:"Cannot use that Username"};
   }
@@ -91,8 +127,8 @@ async function createUser(submit){
 };
 
 //helper function for if something already exists on the table
-async function exists(something){
-  const existsQuery = "SELECT EXISTS( SELECT name from authentication WHERE name='"+something+"')";
+async function exists(object, column, something){
+  const existsQuery = "SELECT EXISTS( SELECT "+object+" from authentication WHERE "+column+"='"+something+"')";
   const find = await fetchData.allsql(existsQuery);
   return await find[0][Object.keys(find[0])[0]];
 }

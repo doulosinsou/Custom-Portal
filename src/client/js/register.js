@@ -2,7 +2,15 @@ window.addEventListener("load", start)
 
 function start(){
 console.log("js connected");
-document.getElementById("auth").addEventListener("submit", register);
+  // const auth = document.getElementById("auth");
+  // if (auth !== null){
+  //   auth.addEventListener("submit", register);
+  // }
+  // const resForm = document.getElementById('reset');
+  // if (resForm){
+  //   reset.addEventListener("submit", reset);
+  // }
+  document.getElementById('reset').addEventListener("submit", reset)
 }
 
 async function register(){
@@ -58,4 +66,34 @@ async function vali(userData, warning){
     return true;
     }
   }
+}
+
+async function reset(){
+  event.preventDefault();
+  const form = document.getElementById("reset");
+
+  const alert = document.getElementById('pass_alert');
+
+  const isValid = await validate(form.new_pass.value);
+
+  if(isValid.alert){
+    alert.innerHTML = isValid.alert;
+    return
+  }
+
+  if (form.new_pass.value !== form.confirm_pass.value){
+    alert.innerHTML = "New Password and confirm password do not match";
+    return
+  }
+
+  const param = new URLSearchParams(window.location.search).get("token");
+
+  const userData = {
+    pass: form.new_pass.value,
+    token: param
+  };
+  console.log(userData)
+  const check = await postIt('/register/newPass/', userData);
+  window.location.href = check.redirect;
+
 }
