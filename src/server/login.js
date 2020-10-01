@@ -7,7 +7,7 @@ const verifyToken = require('./Verify_Token')
 const cookies = require('cookies')
 
 async function login(req, res, next) {
-  const find = await fetchData.find("name", req.body.name);
+  const find = await fetchData.find("username", req.body.username);
 
   if (find.err) {
     res.status(500).send('Error on the server.');
@@ -31,14 +31,15 @@ async function login(req, res, next) {
   const token = jwt.sign({id: find[0].ID}, process.env.SECRET, {
     expiresIn: 86400*7 // expires in 24 hours
   });
-  console.log(find[0].name+" has just logged in");
+  console.log(find[0].username+" has just logged in");
   const sixmo = 1000*60*60*24*30*6; //mill*sec*min*hours*days*months
   const dets = {
     maxAge: sixmo,
     secure: false, //follow up SSL
     httpOnly: false,
     path: '/',
-    signed: false
+    signed: false,
+    sameSite: "strict"
   }
 
   const cooks = new cookies(req,res);

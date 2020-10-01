@@ -19,12 +19,12 @@ async function personal(){
 
   let ob = {}
   let rep = ob;
-  for (let i=0; i<inputs.length; i++){
+  for (let i=0; i<inputs.length; i++){ //cycle through all inputs
     const xm = inputs[i];
-    if(xm.hasAttribute("data-JSON")){
+    if(xm.hasAttribute("data-JSON")){//see if data should be grouped (manually added to .ma)
       const json = xm.getAttribute("data-JSON");
       const split = json.split('.');
-      for (let s = 1; s < split.length-1; ++ s) {
+      for (let s = 1; s < split.length-1; ++ s) {//breakdown the string and make into nested objects
         rep = rep[split[s]] = {};
       }
       rep[split[split.length-1]] = inputs[i].value;

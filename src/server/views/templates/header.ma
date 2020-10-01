@@ -17,7 +17,7 @@
     <h1>Moyer Audio App</h1>
     <h2>Portal: Home</h2>
     <div class="user">
-      <button class="barbut" id = "username">{$name$}</button>
+      <button class="barbut" id = "username">{$username$}</button>
       <button class="barbut" id = "logout" onclick="logout()">Logout</button>
     </div>
   </header>

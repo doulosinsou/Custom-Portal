@@ -1,6 +1,7 @@
 <main>
     <section>
       <h3>Account Settings</h3>
+      <p>Username: {$username$}</p>
       <p>Title: {$job$}</p>
       <p>Role: {$role$}</p>
 

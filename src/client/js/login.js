@@ -27,7 +27,7 @@ async function login(){
   event.preventDefault();
   const form = document.getElementById("log");
   const userData = {
-    name: form.name.value,
+    username: form.username.value,
     password: form.pass.value,
   };
   const valid = validate(userData, "logErr");

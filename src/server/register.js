@@ -58,7 +58,7 @@ router.post('/newPass', async function(req,res){
   // return
   const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
   fetchData.update({pass:hashedPassword}, "token", req.body.token);
-  console.log("resetting password for user "+find[0].name);
+  console.log("resetting password for user "+find[0].username);
   // res.status(200).send({success: "successful password reset"})
   const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.token+"'";
   fetchData.allsql(update);
@@ -77,7 +77,7 @@ async function register(req, res, next) {
 
 //pass parameters of req data to above function
   const created = await createUser({
-    name : req.body.name,
+    username : req.body.username,
     email : req.body.email,
     // pass : hashedPassword,
     token: verifyCode(),
@@ -89,7 +89,7 @@ async function register(req, res, next) {
   if (!created) return req.data = "There was a problem registering the user";
   if (created.nameExists) return res.status(401).send(created);
   req.data = created[0];
-  console.log("registered user "+created[0].name);
+  console.log("registered user "+created[0].username);
   next()
 };
 
@@ -107,7 +107,7 @@ function verifyCode(){
 
 //helper to actually make new mysql table row
 async function createUser(submit){
-  if (await exists("name", "name", submit.name)) {
+  if (await exists("username", "username", submit.username)) {
     // console.log(exists(submit.name));
     console.log("submition name exists")
     return {nameExists:"Cannot use that Username"};
@@ -123,7 +123,7 @@ async function createUser(submit){
 
   const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
   fetchData.allsql(newRow);
-  return await fetchData.find("name", submit.name);
+  return await fetchData.find("username", submit.username);
 };
 
 //helper function for if something already exists on the table

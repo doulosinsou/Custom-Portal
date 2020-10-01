@@ -7,6 +7,6 @@
     <admin>
       <br>
       <h4>This section is for administrators only</h4>
-    </admin>  
+    </admin>
   </section>
 </main>

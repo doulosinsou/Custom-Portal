@@ -17,7 +17,7 @@ async function register(){
   event.preventDefault();
   const form = document.getElementById("auth");
   const userData = {
-    name: form.name.value,
+    username: form.username.value,
     email: form.email.value,
     pass: form.pass.value,
     verification: form.verify
