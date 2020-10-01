@@ -29,12 +29,17 @@ router.get('/reset', function(req,res){
 
 router.post('/verify', async function(req,res){
   const email = req.body.email
-  const exi = await exists("email", "email", email);
-  if (!exi){
+  const exEmail = await exists("email", "email", email);
+  if (!exEmail){
     res.status(401).send({noEmail: "Cannot find account with this email"});
     return
   }
-
+  const exToken = await exists("token", "email", email);
+  if (exToken){
+    console.log("token already exists")
+    return
+  }
+  console.log("token does not exist");
   const token = verifyCode();
   fetchData.update({token:token}, "email", email);
 
@@ -57,11 +62,16 @@ router.post('/newPass', async function(req,res){
   // console.log(req.body.token);
   // return
   const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
-  fetchData.update({pass:hashedPassword}, "token", req.body.token);
+  const update = {
+    pass:hashedPassword,
+    token: '',
+    active: 1,
+  };
+  fetchData.update(update, "token", req.body.token);
   console.log("resetting password for user "+find[0].username);
   // res.status(200).send({success: "successful password reset"})
-  const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.token+"'";
-  fetchData.allsql(update);
+  // const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.token+"'";
+  // fetchData.allsql(update);
   res.status(301).send({redirect:'/activated'});
 })
 
