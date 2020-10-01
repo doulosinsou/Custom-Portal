@@ -22,12 +22,35 @@ const allMysql = async function (query){
 
 const findsomething = async function (cond, val){
   return new Promise(function(resolve, reject){
-      pool.query("SELECT * FROM authentication WHERE "+cond+"=? ", [val], function(err, result){
-        if (err) console.log(err);
-        // console.log(query);
-        // console.log(result);
-        resolve(result);
-      });
+      if (!cond || !val){
+        pool.query("SELECT * FROM authentication", function(err, result){
+          if (err) console.log(err);
+          const parsed = jsonparse(result)
+          resolve(parsed);
+        })
+      }else{
+        pool.query("SELECT * FROM authentication WHERE "+cond+"=? ", [val], function(err, result){
+          if (err) console.log(err);
+          const parsed2 = jsonparse(result)
+          resolve(parsed2);
+        });
+      }
+    });
+  };
+
+const findonly = async function (cols){
+  return new Promise(function(resolve, reject){
+    let columns = ""
+      for (i in cols){
+        columns = columns+cols[i]+", ";
+      }
+      columns = columns.substring(0, columns.length-2);
+
+      pool.query("SELECT "+columns+" FROM authentication", function(err, result){
+          if (err) console.log(err);
+          const parsed = jsonparse(result)
+          resolve(parsed);
+        });
     });
   };
 
@@ -59,6 +82,19 @@ const updatesomething = async function (change, cond, val){
     });
   };
 
+//helper to identify and parse JSON columns
+function jsonparse(data){
+  for (i in data){
+    for (n in data[i]){
+      if (RegExp(/\{.*?\}/).test(data[i][n])){
+        data[i][n] = JSON.parse(data[i][n]);
+      }
+    }
+  }
+  return data;
+}
+
 exports.allsql = allMysql;
 exports.find = findsomething;
 exports.update = updatesomething;
+exports.only = findonly;

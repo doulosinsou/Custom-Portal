@@ -35,12 +35,9 @@ async function process(filePath, data, callback) {
         const split = raw.split(".");
         let datacopy = data;
         for (subitem in split){
-          // if(datacopy[split[subitem]] == null){
             try{
             datacopy = datacopy[split[subitem]];
           }catch(e){
-
-          // }else{
             datacopy = undefined;
           }
         }

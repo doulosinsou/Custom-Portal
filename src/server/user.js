@@ -23,6 +23,27 @@ router.get('/user', function (req,res){
   res.render('user', req.me);
 });
 
+router.get('/userList', admin, function (req,res){
+  req.me.backto = "/portal/";
+  req.me.title = "User List";
+  req.me.js = "manage_users.js";
+  res.render('userList', req.me);
+});
+
+router.get('/userList/allUsers', admin, async function(req,res){
+  console.log("request to allUsers")
+  const cols = [
+    "username",
+    "name",
+    "role",
+    "active"
+  ]
+  const all = await fetchData.only(cols);
+  res.send(all);
+
+})
+
+
 router.post('/personal', function(req,res){
   fetchData.update(req.body, "ID", req.userId);
 });
@@ -53,14 +74,19 @@ async function myData(req, res, next){
   //get info
   const call = await fetchData.find("ID", req.userId);
   req.me = call[0];
-  req.me.phone = JSON.parse(call[0].phone);
+  // req.me.phone = JSON.parse(call[0].phone);
 
   next();
 }
 
-async function testData(req,res,next){
-  console.log(req.body)
-  // next()
+function admin(req,res,next){
+  if (req.me.role === "admin"){
+    // const all = await fetchData.find();
+    // req.users = all
+  next()
+  }else {
+  return false;
+  }
 }
 
 module.exports = router;
