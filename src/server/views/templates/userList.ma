@@ -9,7 +9,6 @@
         <th>Active Status</th>
         <th></th>
       </tr>
-      
     </table>
   </section>
 </main>

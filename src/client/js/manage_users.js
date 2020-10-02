@@ -18,7 +18,6 @@ async function poptable(){
       for (n in users[i]){
         const td = document.createElement('td');
         td.innerHTML = users[i][n];
-        
         if (n === "active"){
           if (users[i][n] == 1){
             td.innerHTML = "active"
@@ -26,14 +25,13 @@ async function poptable(){
             td.innerHTML = "inactive"
           }
         }
-
         tr.append(td);
       }
 
     //more link
     const more = document.createElement('td');
     const morelink = document.createElement('a');
-    morelink.href = "/userInfo/"+users[i].username;
+    morelink.href = "/portal/user/"+users[i].username;
     morelink.innerText = "More";
     more.append(morelink);
     const name = tr.querySelector("td:nth-child(2)");

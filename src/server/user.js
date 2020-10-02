@@ -15,12 +15,12 @@ router.get('/', function (req,res){
   res.render('index', req.me);
 });
 
-router.get('/user', function (req,res){
+router.get('/me', function (req,res){
   req.me.backto = "/portal/";
   req.me.title = "Account Settings";
   req.me.js = "account.js";
   req.me.validatejs = "validate.js"
-  res.render('user', req.me);
+  res.render('me', req.me);
 });
 
 router.get('/userList', admin, function (req,res){
@@ -28,6 +28,15 @@ router.get('/userList', admin, function (req,res){
   req.me.title = "User List";
   req.me.js = "manage_users.js";
   res.render('userList', req.me);
+});
+
+router.get('/user/:username', admin, async function (req,res){
+  const call = await fetchData.find("username", req.params.username);
+  req.me.user = call[0];
+  req.me.backto = "/portal/userList/";
+  req.me.title = "User Info";
+  req.me.js = "manage_users.js";
+  res.render('user', req.me);
 });
 
 router.get('/userList/allUsers', admin, async function(req,res){
@@ -42,7 +51,6 @@ router.get('/userList/allUsers', admin, async function(req,res){
   res.send(all);
 
 })
-
 
 router.post('/personal', function(req,res){
   fetchData.update(req.body, "ID", req.userId);
