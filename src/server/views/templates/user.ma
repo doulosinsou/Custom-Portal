@@ -2,7 +2,7 @@
   <section>
     <h3>Username: {$user.username$}</h3>
     <p><i>Preferred Name</i>: {$user.name$}</p>
-    <p><i>Job title</i>: {$user.job$}</p>
+    <p><i>Job title</i>: <input id="jobtitle" type="text" value="{$user.job$}"></p>
     <p><i>Date joined</i>: {$user.signup$}</p>
     <p><i>Last Active</i>: {$user.lastactive$}</p>
   </section>

@@ -56,6 +56,10 @@ router.post('/personal', function(req,res){
   fetchData.update(req.body, "ID", req.userId);
 });
 
+router.post('/adminUpdate', async function(req,res){
+  fetchData.update(req.body, "username", req.body.username);
+});
+
 router.post('/passreset', async function(req,res){
   const find = await fetchData.find("ID", req.userId);
   if (!bcrypt.compareSync(req.body.oldPass, find[0].pass)){

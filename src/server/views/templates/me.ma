@@ -10,7 +10,7 @@
         <label for="name">Name:</label>
           <input type="text" name="name" value="{$name$}">
         <label for="email">Email:</label>
-          <input type="text" name="email" value="{$email$}">
+          <input type="email" name="email" value="{$email$}">
         <label for="address">Address:</label>
           <input type="text" name="address" value="{$address$}">
         <label for="phone">Phone:</label>

@@ -2,7 +2,17 @@ window.addEventListener("load", start);
 
 function start(){
 
-poptable();
+console.log(document.querySelector('title').innerText);
+
+if (document.querySelector('title').innerText === "User List"){
+  poptable();
+  changetable();
+}
+
+if (document.querySelector('title').innerText === "User Info"){
+  
+  userform();
+}
 
 }
 
@@ -51,3 +61,36 @@ async function poptable(){
   table.append(frag);
 
 }
+
+function changetable(){
+  document.getElementById('')
+}
+
+
+function userform(){
+  const path = window.location.pathname;
+  const username = path.substr(path.lastIndexOf('/') +1);
+  const job = document.getElementById("jobtitle").value;
+  const update = {
+    username: username,
+    job: job
+  }
+  // postIt('/portal/adminUpdate', update);
+
+
+}
+
+const postIt = async (url = '', data = {})=>{
+  const call = await fetch(url, {
+    method:'POST',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  })
+  try{
+    const response = await call.json();
+    return response;
+  }catch(error){
+    console.log(error);
+  }
+};
