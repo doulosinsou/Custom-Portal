@@ -1,17 +1,25 @@
 window.addEventListener("load", start);
 
-function start(){
+async function start(){
 
-console.log(document.querySelector('title').innerText);
+// console.log(document.querySelector('title').innerText);
 
 if (document.querySelector('title').innerText === "User List"){
-  poptable();
-  changetable();
+  poptable()
+  .then(()=>{
+     updateAdmin("active")
+     updateAdmin("role")
+     deleteUser()
+  })
+
+  document.getElementById('auth').addEventListener("submit", register)
 }
 
+
+
+
 if (document.querySelector('title').innerText === "User Info"){
-  
-  userform();
+  document.getElementById('upjob').addEventListener("click", userform)
 }
 
 }
@@ -27,13 +35,49 @@ async function poptable(){
     const tr = document.createElement('tr');
       for (n in users[i]){
         const td = document.createElement('td');
-        td.innerHTML = users[i][n];
+
         if (n === "active"){
-          if (users[i][n] == 1){
-            td.innerHTML = "active"
-          }else{
-            td.innerHTML = "inactive"
-          }
+          const drop = document.createElement('select');
+          drop.classList.add("active");
+          const act = document.createElement('option');
+          const inact = document.createElement('option');
+          act.value = 1;
+          act.innerText="active"
+          inact.value=0;
+          inact.innerText="inactive"
+
+          if (users[i][n] == 1) act.selected = true;
+          if (users[i][n] == 0) inact.selected = true;
+
+          drop.append(act);
+          drop.append(inact);
+          td.append(drop);
+
+          // const update = document.createElement('button');
+          // update.classList.add("update-active");
+          // update.innerText = "update";
+          // td.append(update);
+
+        }else if(n === "role"){
+          const drop = document.createElement('select');
+          drop.classList.add("role");
+          const admin = document.createElement('option');
+          const user = document.createElement('option');
+          admin.value = "admin";
+          admin.innerText="admin"
+          user.value="user";
+          user.innerText="user"
+
+          if (users[i][n] === "admin") admin.selected = true;
+          if (users[i][n] === "user") user.selected = true;
+
+          drop.append(admin);
+          drop.append(user);
+          td.append(drop);
+
+
+        }else{
+          td.innerText = users[i][n];
         }
         tr.append(td);
       }
@@ -59,11 +103,17 @@ async function poptable(){
 
   }
   table.append(frag);
-
+  return "done"
 }
 
-function changetable(){
-  document.getElementById('')
+function deleteUser(){
+  const del = document.getElementsByClassName("delete");
+  for (i of del){
+    i.addEventListener("click", function(el){
+      const user = el.target.name;
+      // postIt('/portal/deleteUser', el.target.name)
+    })
+  }
 }
 
 
@@ -75,8 +125,42 @@ function userform(){
     username: username,
     job: job
   }
-  // postIt('/portal/adminUpdate', update);
+  postIt('/portal/adminUpdate', update);
 
+
+}
+
+//helper to update admin changes
+function updateAdmin(item){
+  // console.log(item)
+  const x = document.getElementsByClassName(item);
+
+  for (i of x){
+    i.addEventListener("change", function(){
+      const obj = {};
+      obj[item] = i.value;
+      postIt('portal/adminUpdate', obj);
+    })
+  }
+  // return true
+}
+
+async function register(){
+  event.preventDefault();
+  const form = document.getElementById("auth");
+  const userData = {
+    username: form.username.value,
+    email: form.email.value
+  };
+
+  const check = await postIt('/register/request', userData);
+
+  const comment = document.getElementById('comment')
+  if (check.nameExists){
+    comment.innerHTML = "Username already exists";
+  }else{
+    comment.innerHTML = "New User sent email to sign up"
+  }
 
 }
 

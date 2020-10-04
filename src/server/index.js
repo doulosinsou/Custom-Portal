@@ -37,7 +37,7 @@ async function isValid(req, res, next){
     console.log(req.originalUrl);
     if(req.originalUrl.match(RegExp(/\/portal/))){
       res.redirect(301, "/");
-    }else if (req.originalUrl === "/activated"){
+    }else if (req.url === "/activated"){
       res.sendFile(path.resolve("src/client/index.html"));
     }else if (req.originalUrl === "/login" || req.originalUrl.match(RegExp(/\/register/))){
       next();

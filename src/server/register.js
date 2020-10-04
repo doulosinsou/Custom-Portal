@@ -59,8 +59,7 @@ router.post('/newPass', async function(req,res){
   // console.log(req.params.token);
 
   const find = await fetchData.find("token", req.body.token);
-  // console.log(req.body.token);
-  // return
+
   const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
   const update = {
     pass:hashedPassword,
@@ -69,9 +68,6 @@ router.post('/newPass', async function(req,res){
   };
   fetchData.update(update, "token", req.body.token);
   console.log("resetting password for user "+find[0].username);
-  // res.status(200).send({success: "successful password reset"})
-  // const update = "UPDATE authentication SET token= '', active='1' WHERE token='"+req.params.token+"'";
-  // fetchData.allsql(update);
   res.status(301).send({redirect:'/activated'});
 })
 
@@ -80,12 +76,11 @@ router.post('/newPass', async function(req,res){
 async function register(req, res, next) {
   console.log("received register request. About to process")
 
-  const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
+  // const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
 
   const now = new Date().setHours(new Date().getHours() - 5);
   const newtime = new Date(now).toISOString().slice(0, 19).replace('T', ' ');
 
-//pass parameters of req data to above function
   const created = await createUser({
     username : req.body.username,
     email : req.body.email,
@@ -100,7 +95,7 @@ async function register(req, res, next) {
   if (created.nameExists) return res.status(401).send(created);
   req.data = created[0];
   console.log("registered user "+created[0].username);
-  next()
+  next();
 };
 
 // helper to assign randomized token
