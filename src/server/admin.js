@@ -17,7 +17,7 @@ router.get('/userList', function (req,res){
 router.get('/user/:username', async function (req,res){
   const call = await fetchData.find("username", req.params.username);
   req.me.user = call[0];
-  req.me.backto = "/portal/userList/";
+  req.me.backto = "/portal/admin/userList/";
   req.me.title = "User Info";
   req.me.js = "manage_users.js";
   res.render('user', req.me);

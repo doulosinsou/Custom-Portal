@@ -98,12 +98,10 @@ async function myData(req, res, next){
 }
 
 function admin(req,res,next){
-  if (req.me.role === "admin"){
-    // const all = await fetchData.find();
-    // req.users = all
-  next()
+  if (req.me.role === "admin" || req.me.role === "owner"){
+    next()
   }else {
-  return false;
+    res.redirect(301, "/");
   }
 }
 

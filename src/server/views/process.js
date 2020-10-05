@@ -7,7 +7,7 @@ async function process(filePath, data, callback) {
     const main = filePath;
     let rendered = await mashFiles([header, main, footer]);
 
-    if (data.role !== "admin"){
+    if (data.role !== "admin" && data.role !== "owner"){
       rendered = wipeAdmin(rendered);
     }
 

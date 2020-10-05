@@ -38,51 +38,60 @@ async function poptable(){
         const td = document.createElement('td');
 
         if (n === "active"){
-          const drop = document.createElement('select');
-          drop.classList.add("active");
-          drop.setAttribute("onchange", "updateAdmin(this)");
-          drop.setAttribute("name", "active");
+          if (users[i]["role"] === "owner"){
+            const span = document.createElement('span');
+            span.innerHTML = "<i>active</i>";
+            td.append(span);
+          }else{
+            const drop = document.createElement('select');
+            drop.classList.add("active");
+            drop.setAttribute("onchange", "updateAdmin(this)");
+            drop.setAttribute("name", "active");
 
-          const act = document.createElement('option');
-          const inact = document.createElement('option');
-          act.value = 1;
-          act.innerText="active"
-          inact.value=0;
-          inact.innerText="inactive"
+            const act = document.createElement('option');
+            const inact = document.createElement('option');
+            act.value = 1;
+            act.innerText="active"
+            inact.value=0;
+            inact.innerText="inactive"
 
-          if (users[i][n] == 1) act.selected = true;
-          if (users[i][n] == 0) inact.selected = true;
+            if (users[i][n] == 1) act.selected = true;
+            if (users[i][n] == 0) inact.selected = true;
 
-          drop.append(act);
-          drop.append(inact);
-          td.append(drop);
-
+            drop.append(act);
+            drop.append(inact);
+            td.append(drop);
+          }
           // const update = document.createElement('button');
           // update.classList.add("update-active");
           // update.innerText = "update";
           // td.append(update);
 
         }else if(n === "role"){
-          const drop = document.createElement('select');
-          drop.classList.add("role");
-          drop.setAttribute("onchange", "updateAdmin(this)");
-          drop.setAttribute('name', 'role');
+          if (users[i]["role"] === "owner"){
+            const span = document.createElement('span');
+            span.innerHTML = "<i>Owner</i>";
+            td.append(span);
+          }else{
+            const drop = document.createElement('select');
+            drop.classList.add("role");
+            drop.setAttribute("onchange", "updateAdmin(this)");
+            drop.setAttribute('name', 'role');
 
-          const admin = document.createElement('option');
-          const user = document.createElement('option');
-          admin.value = "admin";
-          admin.innerText="admin"
-          user.value="user";
-          user.innerText="user"
+            const admin = document.createElement('option');
+            const user = document.createElement('option');
+            admin.value = "admin";
+            admin.innerText="admin"
+            user.value="user";
+            user.innerText="user"
 
-          if (users[i][n] === "admin") admin.selected = true;
-          if (users[i][n] === "user") user.selected = true;
+            if (users[i][n] === "admin") admin.selected = true;
+            if (users[i][n] === "user") user.selected = true;
 
-          drop.append(admin);
-          drop.append(user);
-          td.append(drop);
-
-
+            drop.append(admin);
+            drop.append(user);
+            td.append(drop);
+          }
         }else{
           td.innerText = users[i][n];
         }
@@ -92,22 +101,23 @@ async function poptable(){
     //more link
     const more = document.createElement('td');
     const morelink = document.createElement('a');
-    morelink.href = "/portal/user/"+users[i].username;
+    morelink.href = "/portal/admin/user/"+users[i].username;
     morelink.innerText = "More";
     more.append(morelink);
     const name = tr.querySelector("td:nth-child(2)");
     name.after(more);
 
     //Delete user option
-    const del = document.createElement('td');
-    const delbut = document.createElement('button');
-    delbut.classList.add("delete");
-    delbut.innerText = "Delete";
-    delbut.setAttribute("onclick","deleteUser(this)");
-    tr.append(delbut);
+    if (users[i]["role"] !== "owner"){
+      const del = document.createElement('td');
+      const delbut = document.createElement('button');
+      delbut.classList.add("delete");
+      delbut.innerText = "Delete";
+      delbut.setAttribute("onclick","deleteUser(this)");
+      tr.append(delbut);
+    }
 
-    frag.append(tr);
-
+      frag.append(tr);
   }
   table.append(frag);
   return "done"
@@ -116,11 +126,13 @@ async function poptable(){
 //update admin changes
 function updateAdmin(elem){
   const username = elem.closest('tr').querySelector("td").innerText;
-  const userQuery = "?username="+username;
-
-  const update = {}
-  update[elem.name] = elem.value;
-  postIt('/portal/admin/update'+userQuery+tableQuery, update)
+  const sure = confirm("Confirm updating "+elem.name+" status of "+username);
+  if (sure){
+    const userQuery = "?username="+username;
+    const update = {}
+    update[elem.name] = elem.value;
+    postIt('/portal/admin/update'+userQuery+tableQuery, update)
+  }
 }
 
 function deleteUser(elem){
