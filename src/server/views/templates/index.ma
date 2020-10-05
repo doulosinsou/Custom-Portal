@@ -15,7 +15,7 @@
   <admin>
     <section id="users_wrapper" class="block">
       <h4>Users</h4>
-      <a href="/portal/userList">Manage Users</a>
+      <a href="/portal/admin/userList">Manage Users</a>
     </section>
     <section id="items_wrapper" class="block">
       <h4>Edit Quote Items</h4>

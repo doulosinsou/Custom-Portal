@@ -1,4 +1,5 @@
 window.addEventListener("load", start);
+const tableQuery = "&table=users";
 
 async function start(){
 
@@ -7,9 +8,9 @@ async function start(){
 if (document.querySelector('title').innerText === "User List"){
   poptable()
   .then(()=>{
-     updateAdmin("active")
-     updateAdmin("role")
-     deleteUser()
+     // updateAdmin("active")
+     // updateAdmin("role")
+     // deleteUser()
   })
 
   document.getElementById('auth').addEventListener("submit", register)
@@ -27,7 +28,7 @@ if (document.querySelector('title').innerText === "User Info"){
 async function poptable(){
   const table = document.getElementById('users')
   const frag = document.createDocumentFragment();
-  const us = await fetch("/portal/userList/allUsers");
+  const us = await fetch("/portal/admin/userList/allUsers");
   const users = await us.json()
 
   //populate table from users objects
@@ -39,6 +40,9 @@ async function poptable(){
         if (n === "active"){
           const drop = document.createElement('select');
           drop.classList.add("active");
+          drop.setAttribute("onchange", "updateAdmin(this)");
+          drop.setAttribute("name", "active");
+
           const act = document.createElement('option');
           const inact = document.createElement('option');
           act.value = 1;
@@ -61,6 +65,9 @@ async function poptable(){
         }else if(n === "role"){
           const drop = document.createElement('select');
           drop.classList.add("role");
+          drop.setAttribute("onchange", "updateAdmin(this)");
+          drop.setAttribute('name', 'role');
+
           const admin = document.createElement('option');
           const user = document.createElement('option');
           admin.value = "admin";
@@ -95,8 +102,8 @@ async function poptable(){
     const del = document.createElement('td');
     const delbut = document.createElement('button');
     delbut.classList.add("delete");
-    delbut.name = users[i].username;
     delbut.innerText = "Delete";
+    delbut.setAttribute("onclick","deleteUser(this)");
     tr.append(delbut);
 
     frag.append(tr);
@@ -106,13 +113,24 @@ async function poptable(){
   return "done"
 }
 
-function deleteUser(){
-  const del = document.getElementsByClassName("delete");
-  for (i of del){
-    i.addEventListener("click", function(el){
-      const user = el.target.name;
-      // postIt('/portal/deleteUser', el.target.name)
-    })
+//update admin changes
+function updateAdmin(elem){
+  const username = elem.closest('tr').querySelector("td").innerText;
+  const userQuery = "?username="+username;
+
+  const update = {}
+  update[elem.name] = elem.value;
+  postIt('/portal/admin/update'+userQuery+tableQuery, update)
+}
+
+function deleteUser(elem){
+  const username = elem.closest('tr').querySelector("td").innerText;
+  const sure = confirm("Confirm Deleting user "+username);
+  if (sure){
+    const userQuery = "?username="+username;
+    const del = {};
+    del.delete = true;
+    postIt('/portal/admin/update'+userQuery+tableQuery, del)
   }
 }
 
@@ -122,27 +140,11 @@ function userform(){
   const username = path.substr(path.lastIndexOf('/') +1);
   const job = document.getElementById("jobtitle").value;
   const update = {
-    username: username,
     job: job
   }
-  postIt('/portal/adminUpdate', update);
+  const userQuery = "?username="+username;
 
-
-}
-
-//helper to update admin changes
-function updateAdmin(item){
-  // console.log(item)
-  const x = document.getElementsByClassName(item);
-
-  for (i of x){
-    i.addEventListener("change", function(){
-      const obj = {};
-      obj[item] = i.value;
-      postIt('portal/adminUpdate', obj);
-    })
-  }
-  // return true
+  postIt('/portal/admin/update'+userQuery+tableQuery, update);
 }
 
 async function register(){

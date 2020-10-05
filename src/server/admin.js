@@ -6,7 +6,7 @@ router.use(bodyParser.json());
 const fetchData = require('./mysql');
 
 //Admin page for listing all users
-router.get('/userList', admin, function (req,res){
+router.get('/userList', function (req,res){
   req.me.backto = "/portal/";
   req.me.title = "User List";
   req.me.js = "manage_users.js";
@@ -14,7 +14,7 @@ router.get('/userList', admin, function (req,res){
 });
 
 //admin page to see user details
-router.get('/user/:username', admin, async function (req,res){
+router.get('/user/:username', async function (req,res){
   const call = await fetchData.find("username", req.params.username);
   req.me.user = call[0];
   req.me.backto = "/portal/userList/";
@@ -24,7 +24,7 @@ router.get('/user/:username', admin, async function (req,res){
 });
 
 //admin browser builds userlist table
-router.get('/userList/allUsers', admin, async function(req,res){
+router.get('/userList/allUsers', async function(req,res){
   console.log("request to allUsers")
   const cols = [
     "username",
@@ -37,15 +37,18 @@ router.get('/userList/allUsers', admin, async function(req,res){
 })
 
 //admin update user table
-router.post('/update/', async function(req,res){
-    const username = req.body.username;
-    delete req.body.username;
+router.post('/update', async function(req,res){
+    const username = req.query.username;
 
     if(req.body.delete && (username != req.me.username)){
       const del = "DELETE from authentication WHERE username='"+username+"'";
       fetchData.allsql(del);
-    }else{
+
+    }else if (!req.body.delete){
       fetchData.update(req.body, "username", username)
     }
 
 })
+
+
+module.exports = router
