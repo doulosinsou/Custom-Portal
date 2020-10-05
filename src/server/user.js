@@ -6,7 +6,10 @@ router.use(bodyParser.json());
 const fetchData = require('./mysql');
 const bcrypt = require('bcryptjs');
 
+const adminRouter = require('./admin')
+
 router.use(myData);
+router.use('/admin', admin, adminRouter)
 
 router.get('/', function (req,res){
   req.me.backto = "";
@@ -23,42 +26,45 @@ router.get('/me', function (req,res){
   res.render('me', req.me);
 });
 
-router.get('/userList', admin, function (req,res){
-  req.me.backto = "/portal/";
-  req.me.title = "User List";
-  req.me.js = "manage_users.js";
-  res.render('userList', req.me);
-});
-
-router.get('/user/:username', admin, async function (req,res){
-  const call = await fetchData.find("username", req.params.username);
-  req.me.user = call[0];
-  req.me.backto = "/portal/userList/";
-  req.me.title = "User Info";
-  req.me.js = "manage_users.js";
-  res.render('user', req.me);
-});
-
-router.get('/userList/allUsers', admin, async function(req,res){
-  console.log("request to allUsers")
-  const cols = [
-    "username",
-    "name",
-    "role",
-    "active"
-  ]
-  const all = await fetchData.only(cols);
-  res.send(all);
-
-})
+// router.get('/userList', admin, function (req,res){
+//   req.me.backto = "/portal/";
+//   req.me.title = "User List";
+//   req.me.js = "manage_users.js";
+//   res.render('userList', req.me);
+// });
+//
+// router.get('/user/:username', admin, async function (req,res){
+//   const call = await fetchData.find("username", req.params.username);
+//   req.me.user = call[0];
+//   req.me.backto = "/portal/userList/";
+//   req.me.title = "User Info";
+//   req.me.js = "manage_users.js";
+//   res.render('user', req.me);
+// });
+//
+// router.get('/userList/allUsers', admin, async function(req,res){
+//   console.log("request to allUsers")
+//   const cols = [
+//     "username",
+//     "name",
+//     "role",
+//     "active"
+//   ]
+//   const all = await fetchData.only(cols);
+//   res.send(all);
+//
+// })
 
 router.post('/personal', function(req,res){
   fetchData.update(req.body, "ID", req.userId);
 });
 
-router.post('/adminUpdate', async function(req,res){
-  fetchData.update(req.body, "username", req.body.username);
-});
+// router.post('/adminUpdate', async function(req,res){
+//   fetchData.update(req.body.job, "username", req.body.username);
+// });
+
+  // fetchData.update(req.body.job, "username", req.body.username);
+// });
 
 router.post('/passreset', async function(req,res){
   const find = await fetchData.find("ID", req.userId);
