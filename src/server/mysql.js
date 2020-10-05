@@ -20,16 +20,20 @@ const allMysql = async function (query){
     });
   };
 
-const findsomething = async function (cond, val){
+const findsomething = async function (search){
+  const cond = search.condition;
+  const val = search.value;
+  const table = search.table;
+
   return new Promise(function(resolve, reject){
-      if (!cond || !val){
-        pool.query("SELECT * FROM authentication", function(err, result){
+      if (!cond && !val){
+        pool.query("SELECT * FROM"+table, function(err, result){
           if (err) console.log(err);
           const parsed = jsonparse(result)
           resolve(parsed);
         })
       }else{
-        pool.query("SELECT * FROM authentication WHERE "+cond+"=? ", [val], function(err, result){
+        pool.query("SELECT * FROM "+table+" WHERE "+cond+"=? ", [val], function(err, result){
           if (err) console.log(err);
           const parsed2 = jsonparse(result)
           resolve(parsed2);
@@ -38,7 +42,10 @@ const findsomething = async function (cond, val){
     });
   };
 
-const findonly = async function (cols){
+const findonly = async function (search){
+  const cols = search.columns;
+  const table = search.table;
+
   return new Promise(function(resolve, reject){
     let columns = ""
       for (i in cols){
@@ -46,7 +53,7 @@ const findonly = async function (cols){
       }
       columns = columns.substring(0, columns.length-2);
 
-      pool.query("SELECT "+columns+" FROM authentication", function(err, result){
+      pool.query("SELECT "+columns+" FROM "+table, function(err, result){
           if (err) console.log(err);
           const parsed = jsonparse(result)
           resolve(parsed);
@@ -54,7 +61,12 @@ const findonly = async function (cols){
     });
   };
 
-const updatesomething = async function (change, cond, val){
+const updatesomething = async function (search){
+  const change = search.change;
+  const cond = search.condition;
+  const val = search.value;
+  const table = search.table;
+
   return new Promise(async function(resolve, reject){
 
     let upstr = ""
@@ -73,7 +85,7 @@ const updatesomething = async function (change, cond, val){
       upstr= upstr.substring(0,upstr.length-2);
       console.log(upstr)
 
-      pool.query("UPDATE authentication SET "+upstr+" WHERE "+cond+"=? ", [val], function(err, result){
+      pool.query("UPDATE "+table+" SET "+upstr+" WHERE "+cond+"=? ", [val], function(err, result){
         if (err) console.log(err);
         // console.log(query);
         console.log();

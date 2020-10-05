@@ -41,7 +41,13 @@ router.post('/verify', async function(req,res){
   }
   console.log("token does not exist");
   const token = verifyCode();
-  fetchData.update({token:token}, "email", email);
+  const updateData = {
+    change: {token:token},
+    condition: "email",
+    value: email,
+    table: "users"
+  }
+  fetchData.update(updateData);
 
   const options = {
     to: email,
@@ -57,16 +63,25 @@ router.post('/verify', async function(req,res){
 
 router.post('/newPass', async function(req,res){
   // console.log(req.params.token);
-
-  const find = await fetchData.find("token", req.body.token);
+  const findData = {
+    condition: "token",
+    value: req.body.token,
+    table: "users"
+  }
+  const find = await fetchData.find(findData);
 
   const hashedPassword = bcrypt.hashSync(req.body.pass, 8);
   const update = {
-    pass:hashedPassword,
-    token: '',
-    active: 1,
+    condition:"token",
+    value: req.body.token,
+    table: "users",
+    change: {
+      pass:hashedPassword,
+      token: '',
+      active: 1,
+    }
   };
-  fetchData.update(update, "token", req.body.token);
+  fetchData.update(update);
   console.log("resetting password for user "+find[0].username);
   res.status(301).send({redirect:'/activated'});
 })
@@ -126,14 +141,20 @@ async function createUser(submit){
     rows.push("'"+value+"'");
   }
 
-  const newRow = "INSERT INTO authentication ("+columns+") VALUES ("+rows+")";
+  const newRow = "INSERT INTO users ("+columns+") VALUES ("+rows+")";
   fetchData.allsql(newRow);
-  return await fetchData.find("username", submit.username);
+
+  const findData = {
+    condition: "username",
+    value: submit.username,
+    table: "users"
+  }
+  return await fetchData.find(findData);
 };
 
 //helper function for if something already exists on the table
 async function exists(object, column, something){
-  const existsQuery = "SELECT EXISTS( SELECT "+object+" from authentication WHERE "+column+"='"+something+"')";
+  const existsQuery = "SELECT EXISTS( SELECT "+object+" from users WHERE "+column+"='"+something+"')";
   const find = await fetchData.allsql(existsQuery);
   return await find[0][Object.keys(find[0])[0]];
 }

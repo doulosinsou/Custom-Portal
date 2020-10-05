@@ -15,7 +15,12 @@ router.get('/userList', function (req,res){
 
 //admin page to see user details
 router.get('/user/:username', async function (req,res){
-  const call = await fetchData.find("username", req.params.username);
+  const findData = {
+    condition: "username",
+    value: req.params.username,
+    table: "users"
+  }
+  const call = await fetchData.find(findData);
   req.me.user = call[0];
   req.me.backto = "/portal/admin/userList/";
   req.me.title = "User Info";
@@ -32,7 +37,7 @@ router.get('/userList/allUsers', async function(req,res){
     "role",
     "active"
   ]
-  const all = await fetchData.only(cols);
+  const all = await fetchData.only({columns:cols, table:"users"});
   res.send(all);
 })
 
@@ -41,11 +46,17 @@ router.post('/update', async function(req,res){
     const username = req.query.username;
 
     if(req.body.delete && (username != req.me.username)){
-      const del = "DELETE from authentication WHERE username='"+username+"'";
+      const del = "DELETE from users WHERE username='"+username+"'";
       fetchData.allsql(del);
 
     }else if (!req.body.delete){
-      fetchData.update(req.body, "username", username)
+      const updateData = {
+        change: req.body,
+        condition: "username",
+        value: username,
+        table: "users"
+      }
+      fetchData.update(updateData)
     }
 
 })

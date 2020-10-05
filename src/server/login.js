@@ -7,7 +7,12 @@ const verifyToken = require('./Verify_Token')
 const cookies = require('cookies')
 
 async function login(req, res, next) {
-  const find = await fetchData.find("username", req.body.username);
+  const findData = {
+    condition: "username",
+    value: req.body.username,
+    table: "users"
+  }
+  const find = await fetchData.find(findData);
 
   if (find.err) {
     res.status(500).send('Error on the server.');
