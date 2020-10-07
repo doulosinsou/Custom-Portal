@@ -26,6 +26,17 @@ router.get('/me', function (req,res){
   res.render('me', req.me);
 });
 
+router.get('/notice', async function(req,res){
+  let findData = {table:'notice_board'};
+  if (req.me.role !== "admin" && req.me.role !== "owner"){
+    findData.condition = "target";
+    findData.value = req.me.username;
+  }
+  const find = await fetchData.find(findData);
+  const notice = {role:req.me.role, data:find}
+  res.send(notice);
+})
+
 router.post('/personal', function(req,res){
   const updateData = {
     change: req.body,
@@ -64,10 +75,16 @@ async function myData(req, res, next){
   //log recent activity
   const now = new Date().setHours(new Date().getHours() - 5);
   const newtime = new Date(now).toISOString().slice(0, 19).replace('T', ' ');
-  const logTime = "UPDATE users SET lastactive='"+newtime+"' WHERE ID='"+req.userId+"'";
-  fetchData.allsql(logTime);
+  const updateData = {
+    change: {lastactive:newtime},
+    condition: "ID",
+    value: req.userId,
+    table: "users"
+  }
+  // const logTime = "UPDATE users SET lastactive='"+newtime+"' WHERE ID='"+req.userId+"'";
+  fetchData.update(updateData);
 
-  //get info
+  //get personal info
   const findData = {
     condition: "ID",
     value: req.userId,
@@ -75,6 +92,7 @@ async function myData(req, res, next){
   }
   const call = await fetchData.find(findData);
   req.me = call[0];
+
   next();
 }
 

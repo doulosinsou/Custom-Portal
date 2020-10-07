@@ -27,7 +27,7 @@ const findsomething = async function (search){
 
   return new Promise(function(resolve, reject){
       if (!cond && !val){
-        pool.query("SELECT * FROM"+table, function(err, result){
+        pool.query("SELECT * FROM "+table, function(err, result){
           if (err) console.log(err);
           const parsed = jsonparse(result)
           resolve(parsed);

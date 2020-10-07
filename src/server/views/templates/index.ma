@@ -1,9 +1,7 @@
 <main>
-  <section>
-    <h3>Welcome back {$name$}</h3>
-    <p>Your email is {$email$}</p>
-    <p>Let's begin to set things up: This is page one</p>
-  </section>
+<h3>Welcome back {$name$}</h3>
+    <section id="notice_board">
+    </section>
   <section id="newQ_wrapper" class="block">
     <h4>New Quote</h4>
     <p>Make a new quote for new or existing customers</p>
