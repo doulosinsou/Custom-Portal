@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node src/server/index.js",
-    "mysql": "node src/server/mysql.js"
+    "sass": "sass --watch src/client/scss:src/client/css"
   },
   "author": "Luke Moyer",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.4.11",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sass": "^1.26.12"
   }
 }

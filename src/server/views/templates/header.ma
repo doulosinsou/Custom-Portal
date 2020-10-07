@@ -14,8 +14,10 @@
 </head>
 <body>
   <header>
-    <h1>Moyer Audio App</h1>
-    <h2>Portal: Home</h2>
+    <div class="header_title">
+      <h1>Moyer Audio App</h1>
+      <h2>Portal: Home</h2>
+    </div>
     <div class="user">
       <a class="barbut" id = "username" href="/portal/me">{$username$}</a>
       <button class="barbut" id = "logout" onclick="logout()">Logout</button>

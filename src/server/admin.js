@@ -35,6 +35,7 @@ router.get('/userList/allUsers', async function(req,res){
     "username",
     "name",
     "role",
+    "job",
     "active"
   ]
   const all = await fetchData.only({columns:cols, table:"users"});
