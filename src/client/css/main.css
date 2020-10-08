@@ -81,17 +81,26 @@ footer {
   text-align: center;
 }
 
+.notice_wrapper .notice_edits * {
+  align-self: baseline;
+}
 body {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
   min-height: 100vh;
   background-color: lightGray;
   font-size: 20px;
 }
+body > * {
+  width: 100%;
+}
 
 main {
+  flex: 2;
   background-color: white;
-  max-width: 800px;
+  max-width: 1200px;
   margin-top: 0px;
   padding: 20px;
 }
@@ -102,6 +111,11 @@ main section {
   padding: 10px 10px;
   margin: 20px 0px;
   border: 1px solid gray;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .hidden {

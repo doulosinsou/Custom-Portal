@@ -3,9 +3,15 @@
   .notice_title{}
   .notice_save{}
   .notice_edits{
+      *{
+        align-self:baseline;
+      }
 
+      // display:flex;
 
-    .notice_pattern{}
+    .notice_pattern{
+      // display:flex;
+    }
     .notice_day{}
     .target_wrapper{}
     .click{}

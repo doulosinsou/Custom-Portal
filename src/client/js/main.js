@@ -4,15 +4,17 @@ async function start(){
   const call = await fetch('/portal/notice');
   const notices = await call.json()
   if (notices.role === "admin" || notices.role === "owner"){
-    manageNotices(notices.data)
+    buildNotices(notices.data)
+    .then(()=>{
+      manageNotices()
+    })
   }else{
     // showNotices(notices.data)
   }
 
 }
 
-async function manageNotices(data){
-  // console.log(data)
+async function buildNotices(data){
   // make list of available roles and jobs
   const allCall = await fetch("/portal/admin/userList/allUsers");
   const allUsers = await allCall.json();
@@ -25,6 +27,7 @@ async function manageNotices(data){
     if (roles.indexOf(i.role) === -1) roles.push(i.role);
   }
 
+  //build notices
   const frag = document.createDocumentFragment();
   for (index of data){
 
@@ -33,12 +36,12 @@ async function manageNotices(data){
           content.innerText = index.comment;
     const title = make("h3", ["notice_title", "hidden"]);
           title.innerText = index.notice;
-    const edits = make("div", ["notice_edits", "hidden"]);
+    const edits = make("div", ["notice_edits", "flex", "hidden"]);
     const save = make("button", ["notice_save"]);
           save.innerText = "Save Changes"
 
     //make days pattern
-    const pattern = make("div",["notice_pattern"]);
+    const pattern = make("div",["notice_pattern", "flex"]);
     const patDay = make("form", ["notice_day"]);
     const week = ["sun","mon","tue","wed","thu","fri","sat"];
 
@@ -52,8 +55,9 @@ async function manageNotices(data){
         label.for = j;
         label.innerText = j;
 
-        patDay.append(label);
         patDay.append(day);
+        patDay.append(label);
+
       }
 
     const start = make('input');
@@ -62,7 +66,8 @@ async function manageNotices(data){
     //drop down multiSelect for intended targets
     const targetWrapper = make('div',['target_wrapper'])
     const targetClick = make('span', ['click']);
-    const targets = make('ul',['list']);
+          targetClick.innerText = "Target Audience";
+    const targets = make('ul',['list', 'hidden']);
 
     for (n of roles){
       console.log(n)
@@ -108,10 +113,28 @@ async function manageNotices(data){
   }
 
   document.getElementById('notice_board').append(frag);
-  // document.getElementById('notice_board').innerText = data[0].comment;
+  return true;
 }
 
+function manageNotices(){
+  document.querySelectorAll(".notice_wrapper p").forEach(function(el){
+    el.addEventListener("click", function(cl){
+      console.log(cl.target.parentNode)
 
+      const title = cl.target.parentNode.querySelector(".notice_title");
+      const edits = cl.target.parentNode.querySelector(".notice_edits");
+
+      title.classList.toggle("hidden");
+      edits.classList.toggle("hidden");
+    })
+  })
+
+  document.querySelectorAll('.click').forEach((me)=>{
+    me.addEventListener("click", function(cl){
+      cl.target.parentNode.querySelector('.list').classList.toggle('hidden');
+    })
+  })
+}
 
 function logout(){
   console.log("logout called");
