@@ -18,13 +18,18 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+time, mark, audio, video, textarea {
   margin: 0;
   padding: 0;
   border: 0;
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  cursor: default;
+}
+
+button, a {
+  cursor: pointer;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -81,8 +86,66 @@ footer {
   text-align: center;
 }
 
+.notice_wrapper .notice_title {
+  position: relative;
+  font-style: normal;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.notice_wrapper .notice_title .done {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+.notice_wrapper p:hover {
+  cursor: pointer;
+  color: #800;
+}
+.notice_wrapper .notice_content textarea {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  margin: 10px 0px;
+  padding: 5px;
+  cursor: text;
+}
 .notice_wrapper .notice_edits * {
   align-self: baseline;
+}
+.notice_wrapper .notice_edits .target_wrapper {
+  z-index: 10;
+  position: relative;
+  margin: 8px;
+}
+.notice_wrapper .notice_edits .target_wrapper * {
+  cursor: pointer;
+}
+.notice_wrapper .notice_edits .target_wrapper span {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  padding-right: 50px;
+  display: inline-block;
+}
+.notice_wrapper .notice_edits .target_wrapper span:after {
+  content: ">";
+}
+.notice_wrapper .notice_edits .target_wrapper .list {
+  max-height: 150px;
+  overflow: scroll;
+  background-color: #fff;
+  position: absolute;
+  padding: 5px;
+  width: 100%;
+  left: 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: none;
+  margin: 0;
+}
+.notice_wrapper .notice_edits .target_wrapper ul.list li {
+  padding: 5px 0;
+  display: block;
+}
+.notice_wrapper .notice_edits .target_wrapper ul.list li:hover {
+  background-color: #ccc;
 }
 body {
   display: flex;

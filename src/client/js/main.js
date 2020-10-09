@@ -4,10 +4,8 @@ async function start(){
   const call = await fetch('/portal/notice');
   const notices = await call.json()
   if (notices.role === "admin" || notices.role === "owner"){
-    buildNotices(notices.data)
-    .then(()=>{
-      manageNotices()
-    })
+    buildNotices(notices.data);
+
   }else{
     // showNotices(notices.data)
   }
@@ -32,8 +30,12 @@ async function buildNotices(data){
   for (index of data){
 
     const wrapper = make("div", ["notice_wrapper"]);
-    const content = make("p");
+    const content = make("p",["notice_content"]);
           content.innerText = index.comment;
+          content.onclick = function(){showManage(this)};
+    const done = make('span', ["done"]);
+          done.innerText = "X";
+          done.onclick = function(){showManage(this, 'done')};
     const title = make("h3", ["notice_title", "hidden"]);
           title.innerText = index.notice;
     const edits = make("div", ["notice_edits", "flex", "hidden"]);
@@ -67,6 +69,7 @@ async function buildNotices(data){
     const targetWrapper = make('div',['target_wrapper'])
     const targetClick = make('span', ['click']);
           targetClick.innerText = "Target Audience";
+          targetClick.onclick = function(){dropDown(this)};
     const targets = make('ul',['list', 'hidden']);
 
     for (n of roles){
@@ -104,6 +107,8 @@ async function buildNotices(data){
     edits.append(save);
     edits.append(pattern);
 
+    title.append(done);
+
     wrapper.append(title);
     wrapper.append(content);
     wrapper.append(edits);
@@ -116,24 +121,48 @@ async function buildNotices(data){
   return true;
 }
 
-function manageNotices(){
-  document.querySelectorAll(".notice_wrapper p").forEach(function(el){
-    el.addEventListener("click", function(cl){
-      console.log(cl.target.parentNode)
+function showManage(el, done){
+  const title = el.closest(".notice_wrapper").querySelector(".notice_title");
+  const edits = el.closest(".notice_wrapper").querySelector(".notice_edits");
 
-      const title = cl.target.parentNode.querySelector(".notice_title");
-      const edits = cl.target.parentNode.querySelector(".notice_edits");
+  // console.log(el.firstChild.tagName);
 
-      title.classList.toggle("hidden");
-      edits.classList.toggle("hidden");
-    })
-  })
+  if (done){
+    title.classList.add("hidden");
+    edits.classList.add("hidden");
 
-  document.querySelectorAll('.click').forEach((me)=>{
-    me.addEventListener("click", function(cl){
-      cl.target.parentNode.querySelector('.list').classList.toggle('hidden');
-    })
-  })
+    const text = el.closest(".notice_wrapper").querySelector('p');
+    text.innerHTML = text.firstChild.value;
+    // console.log(text.firstChild.value)
+
+  }else if (el.firstChild.tagName != "TEXTAREA"){
+    const input = make('textarea');
+          input.innerText = el.innerText;
+    console.log(input)
+    el.innerHTML = "";
+    el.append(input)
+
+    title.classList.remove("hidden");
+    edits.classList.remove("hidden");
+  }
+
+
+}
+
+function dropDown(el){
+  const list = el.parentNode.querySelector('.list');
+  // list.classList.remove('hidden');
+  window.addEventListener("click", drop);
+  function drop(){
+    console.log(event.target)
+    if (!event.target.closest(".target_wrapper")){
+      list.classList.toggle('hidden');
+      window.removeEventListener("click", drop);
+    }else if (event.target = el){
+      list.classList.toggle('hidden');
+      window.removeEventListener("click", drop);
+    }
+}
 }
 
 function logout(){
