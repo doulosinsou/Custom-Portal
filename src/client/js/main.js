@@ -33,11 +33,13 @@ async function buildNotices(data){
     const content = make("p",["notice_content"]);
           content.innerText = index.comment;
           content.onclick = function(){showManage(this)};
-    const done = make('span', ["done"]);
+          content.contentEditable = true;
+    const titleWrapper = make("div", ["title_wrapper", "hidden"]);    const done = make('span', ["done"]);
           done.innerText = "X";
           done.onclick = function(){showManage(this, 'done')};
-    const title = make("h3", ["notice_title", "hidden"]);
+    const title = make("h3", ["notice_title"]);
           title.innerText = index.notice;
+          title.contentEditable = true;
     const edits = make("div", ["notice_edits", "flex", "hidden"]);
     const save = make("button", ["notice_save"]);
           save.innerText = "Save Changes"
@@ -73,7 +75,6 @@ async function buildNotices(data){
     const targets = make('ul',['list', 'hidden']);
 
     for (n of roles){
-      console.log(n)
       list(n);
     }
 
@@ -107,9 +108,10 @@ async function buildNotices(data){
     edits.append(save);
     edits.append(pattern);
 
-    title.append(done);
+    titleWrapper.append(title);
+    titleWrapper.append(done);
 
-    wrapper.append(title);
+    wrapper.append(titleWrapper);
     wrapper.append(content);
     wrapper.append(edits);
 
@@ -121,48 +123,63 @@ async function buildNotices(data){
   return true;
 }
 
+//toggles visibility of admin edits to notices
 function showManage(el, done){
-  const title = el.closest(".notice_wrapper").querySelector(".notice_title");
+  const title = el.closest(".notice_wrapper").querySelector(".title_wrapper");
   const edits = el.closest(".notice_wrapper").querySelector(".notice_edits");
 
-  // console.log(el.firstChild.tagName);
-
+  //close down edits
   if (done){
     title.classList.add("hidden");
     edits.classList.add("hidden");
-
-    const text = el.closest(".notice_wrapper").querySelector('p');
-    text.innerHTML = text.firstChild.value;
-    // console.log(text.firstChild.value)
-
-  }else if (el.firstChild.tagName != "TEXTAREA"){
-    const input = make('textarea');
-          input.innerText = el.innerText;
-    console.log(input)
-    el.innerHTML = "";
-    el.append(input)
-
+  }else {
     title.classList.remove("hidden");
     edits.classList.remove("hidden");
   }
-
-
 }
 
+//edits target audience list toggle
 function dropDown(el){
   const list = el.parentNode.querySelector('.list');
-  // list.classList.remove('hidden');
+  list.classList.toggle('hidden');
+  // list.querySelectorAll("input").forEach((n) => {
+  //   n.addEventListener("change", highlight);
+  //   function highlight(){
+  //     console.log(n);
+  //     n.closest("li").classList.toggle("checked");
+  //   }});
+
   window.addEventListener("click", drop);
+  // lets user check boxes on li click
+  // closes list when clicked outside box
   function drop(){
-    console.log(event.target)
-    if (!event.target.closest(".target_wrapper")){
-      list.classList.toggle('hidden');
-      window.removeEventListener("click", drop);
-    }else if (event.target = el){
-      list.classList.toggle('hidden');
+    const lit = event.target.closest(".list");
+    if (lit){
+      const inputs = lit.querySelectorAll("input");
+      const lis = lit.querySelectorAll("li");
+
+      const li = event.target.closest("li");
+      li.classList.toggle("checked");
+      const checked = li.querySelector("input");
+      checked.checked = !checked.checked;
+
+      if(checked.value === "All"){
+        inputs.forEach(me => me.checked = checked.checked)
+        lis.forEach(me => {
+          if (li.classList.contains("checked")){
+            me.classList.add("checked")
+          }else{
+            me.classList.remove("checked")
+          }
+        })
+      }
+    }
+
+    if (event.target != el && !lit){
+      list.classList.add('hidden');
       window.removeEventListener("click", drop);
     }
-}
+  }
 }
 
 function logout(){

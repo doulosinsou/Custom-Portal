@@ -1,30 +1,22 @@
 .notice_wrapper {
 
-  .notice_title{
+  .title_wrapper{
     position:relative;
     font-style:normal;
     font-size: 1.2em;
     font-weight: bold;
+    cursor: text;
     .done{
       position:absolute;
       right:0;
+      top:0;
       cursor:pointer;
     }
   }
 
-  p:hover{
-    cursor:pointer;
-    color: #800;
-  }
-  .notice_content{
-
-    textarea{
-      width:100%;
-      border: 1px solid rgba(0,0,0,.2);
-      margin: 10px 0px;
-      padding: 5px;
-      cursor: text;
-    }
+  .notice_content:hover{
+    // border: 1px dashed red;
+    cursor: text;
   }
 
 
@@ -67,14 +59,24 @@
         border-top: none;
         margin:0;
       }
+      .list input[type="checkbox"]{
+        display: none;
+      }
+
       ul.list li{
         padding: 5px 0;
         display:block;
 
       }
       ul.list li:hover{
-        background-color: #ccc;
+        background-color: #99b3ff;
       }
+
+      ul.list li.checked{
+        font-weight: bold;
+        background-color: #99b3ff;
+      }
+
 
     }
     .click{}
