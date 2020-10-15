@@ -28,14 +28,18 @@ router.get('/me', function (req,res){
 
 router.get('/notice', async function(req,res){
   let findData = {table:'notice_board'};
+  let find
   if (req.me.role !== "admin" && req.me.role !== "owner"){
+    const search = {
+      search: [req.me.role,req.me.job],
+      condition: "target",
+      table: "notice_board"
+    }
+    find = await fetchData.search(search);
 
-    // Use select where like %name%
-    //
-    // findData.condition = "target";
-    // findData.value = req.me.username;
+  }else{
+    find = await fetchData.find(findData);
   }
-  const find = await fetchData.find(findData);
   const notice = {role:req.me.role, data:find}
   res.send(notice);
 })

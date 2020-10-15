@@ -108,6 +108,41 @@ const insert = (submit)=>{
   allMysql(newRow);
 }
 
+const match = async (data)=>{
+  // let search = data.search.stringify().replace(',','|')
+  let cols
+  const cond = data.condition;
+  const table = data.table;
+
+  let search = ""
+  for (let i=0; i<data.search.length; i++){
+    search = search+data.search[i];
+      if ((i+1)!=data.search.length){
+        search = search+"|";
+      }
+  }
+
+  if (!data.columns){
+    cols = ["*"];
+  }else{
+    cols = data.columns
+  }
+
+let columns = ""
+  for (i in cols){
+    columns = columns+cols[i]+", ";
+  }
+  columns = columns.substring(0, columns.length-2);
+
+return new Promise(function(resolve, reject){
+    pool.query("SELECT "+columns+" FROM "+table+" WHERE "+cond+" REGEXP '"+search+"'", function(err, result){
+        if (err) console.log(err);
+        const parsed = jsonparse(result)
+        resolve(parsed);
+      });
+  });
+};
+
 
 //helper to identify and parse JSON columns
 function jsonparse(data){
@@ -126,3 +161,4 @@ exports.find = findsomething;
 exports.update = updatesomething;
 exports.only = findonly;
 exports.insert = insert;
+exports.search = match;
