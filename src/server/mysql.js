@@ -94,6 +94,21 @@ const updatesomething = async function (search){
     });
   };
 
+const insert = (submit)=>{
+  const table = submit.table;
+  const data = submit.data;
+  let columns =[];
+  let rows = [];
+  for (i in data){
+    columns.push(i);
+    rows.push("'"+data[i]+"'");
+  }
+
+  const newRow = "INSERT INTO "+table+" ("+columns+") VALUES ("+rows+")";
+  allMysql(newRow);
+}
+
+
 //helper to identify and parse JSON columns
 function jsonparse(data){
   for (i in data){
@@ -110,3 +125,4 @@ exports.allsql = allMysql;
 exports.find = findsomething;
 exports.update = updatesomething;
 exports.only = findonly;
+exports.insert = insert;

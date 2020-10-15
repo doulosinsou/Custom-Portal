@@ -5,9 +5,8 @@ async function start(){
   const notices = await call.json()
   if (notices.role === "admin" || notices.role === "owner"){
     buildNotices(notices.data);
-
   }else{
-    // showNotices(notices.data)
+    showNotices(notices.data)
   }
 
 }
@@ -142,12 +141,6 @@ function showManage(el, done){
 function dropDown(el){
   const list = el.parentNode.querySelector('.list');
   list.classList.toggle('hidden');
-  // list.querySelectorAll("input").forEach((n) => {
-  //   n.addEventListener("change", highlight);
-  //   function highlight(){
-  //     console.log(n);
-  //     n.closest("li").classList.toggle("checked");
-  //   }});
 
   window.addEventListener("click", drop);
   // lets user check boxes on li click
@@ -179,6 +172,18 @@ function dropDown(el){
       list.classList.add('hidden');
       window.removeEventListener("click", drop);
     }
+  }
+}
+
+function showNotices(data){
+  for (index of data){
+    const board = document.getElementById("notice_board");
+    const wrapper = make("div", ["notice_wrapper"]);
+    const content = make("p",["notice_content"]);
+          content.innerText = index.comment;
+
+    wrapper.append(content);
+    board.append(wrapper);
   }
 }
 
