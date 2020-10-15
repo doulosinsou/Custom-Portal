@@ -29,11 +29,13 @@ async function buildNotices(data){
   for (index of data){
 
     const wrapper = make("div", ["notice_wrapper"]);
+          wrapper.id = index.id;
     const content = make("p",["notice_content"]);
           content.innerText = index.comment;
           content.onclick = function(){showManage(this)};
           content.contentEditable = true;
-    const titleWrapper = make("div", ["title_wrapper", "hidden"]);    const done = make('span', ["done"]);
+    const titleWrapper = make("div", ["title_wrapper", "hidden"]);
+    const done = make('span', ["done"]);
           done.innerText = "X";
           done.onclick = function(){showManage(this, 'done')};
     const title = make("h3", ["notice_title"]);
@@ -42,6 +44,7 @@ async function buildNotices(data){
     const edits = make("div", ["notice_edits", "flex", "hidden"]);
     const save = make("button", ["notice_save"]);
           save.innerText = "Save Changes"
+          save.onclick = function(){changeNotice(this)};
 
     //make days pattern
     const pattern = make("div",["notice_pattern", "flex"]);
@@ -50,12 +53,15 @@ async function buildNotices(data){
 
       for (j of week){
         const day = make("input");
+          if (index.pattern.match(j)){
+            day.setAttribute("checked", true);
+          }
         day.type = "checkbox";
-        day.name = j;
+        day.id = j;
         day.value = j;
 
         const label = make("label");
-        label.for = j;
+        label.setAttribute("for", j);
         label.innerText = j;
 
         patDay.append(day);
@@ -63,8 +69,16 @@ async function buildNotices(data){
 
       }
 
+      console.log(index.start)
+
     const start = make('input');
+          start.name = "start";
+          start.type = "date";
+          start.value =index.start.slice(0,10);
     const end = make('input');
+          end.name = "end";
+          end.type = "date";
+          end.value = index.end.slice(0,10);
 
     //drop down multiSelect for intended targets
     const targetWrapper = make('div',['target_wrapper'])
@@ -86,11 +100,16 @@ async function buildNotices(data){
     //helper to write the list
     function list (item){
       const rol = make('li');
+        const thi = item
+        if (index.target.match(thi)){
+          rol.classList.add("checked");
+        }
       const inp = make('input');
             inp.type = "checkbox";
             inp.value = item;
+            inp.id = item;
       const label= make('label');
-            label.for = item;
+            label.setAttribute("for", item);
             label.innerText = item;
       rol.append(inp);
       rol.append(label);
@@ -187,6 +206,36 @@ function showNotices(data){
   }
 }
 
+function changeNotice(el){
+  const notice = el.closest(".notice_wrapper");
+  const pattern = [];
+  const days = notice.querySelectorAll('.notice_day input');
+    for (i of days){
+      if (i.checked){
+        pattern.push(i.value);
+      }
+    }
+
+  const targets = []
+  const list = notice.querySelectorAll(".list .checked");
+    for (i of list){
+        targets.push(i.querySelector("input").value);
+    }
+
+  const changed = {
+    id: notice.id,
+    notice: notice.querySelector(".notice_title").innerText,
+    comment: notice.querySelector(".notice_content").innerText,
+    pattern: pattern,
+    start: notice.querySelector("[name='start']").value,
+    end: notice.querySelector("[name='end']").value,
+    target: targets,
+  };
+
+  console.log(changed);
+  postIt('/portal/admin/notice', changed);
+}
+
 function logout(){
   console.log("logout called");
   document.cookie = "login=''; max-age=0; SameSite=Strict; path=/";
@@ -203,3 +252,19 @@ function make(tg, cl){
  }
   return el
 }
+
+//helper for Posting to server
+const postIt = async (url = '', data = {})=>{
+  const call = await fetch(url, {
+    method:'POST',
+    credentials: 'same-origin',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  })
+  try{
+    const response = await call.json();
+    return response;
+  }catch(error){
+    console.log(error);
+  }
+};

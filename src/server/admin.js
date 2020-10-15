@@ -42,6 +42,16 @@ router.get('/userList/allUsers', async function(req,res){
   res.send(all);
 })
 
+router.post('/notice/', function(req,res){
+  const updateData = {
+    change: req.body,
+    condition: "id",
+    value: req.body.id,
+    table: "notice_board"
+  }
+  fetchData.update(updateData);
+})
+
 //admin update user table
 router.post('/update', async function(req,res){
     const username = req.query.username;
