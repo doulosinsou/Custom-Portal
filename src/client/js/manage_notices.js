@@ -1,43 +1,22 @@
-window.addEventListener("load", start);
+window.addEventListener("load", poptable);
 const tableQuery = "&table=users";
 
-async function start(){
-
-// console.log(document.querySelector('title').innerText);
-
-if (document.querySelector('title').innerText === "User List"){
-  poptable()
-  .then(()=>{
-     // updateAdmin("active")
-     // updateAdmin("role")
-     // deleteUser()
-  })
-
-  document.getElementById('auth').addEventListener("submit", register)
-}
-
-
-
-
-if (document.querySelector('title').innerText === "User Info"){
-  document.getElementById('upjob').addEventListener("click", userform)
-}
-
-}
-
 async function poptable(){
-  const table = document.getElementById('users')
+  const table = document.getElementById('manage-notices-table')
   const frag = document.createDocumentFragment();
-  const us = await fetch("/portal/admin/userList/allUsers");
-  const users = await us.json()
+  const nots = await fetch("/portal/notice");
+  const notices = await us.json()
 
   //populate table from users objects
-  for (i in users){
+  for (i in notices){
     const tr = document.createElement('tr');
-      for (n in users[i]){
+    const notice = notices[i];
+      for (n in notice){
         const td = document.createElement('td');
 
-        if (n === "active"){
+        if (notice.active){
+          console.log("notice is active today");
+          return;
           if (users[i]["role"] === "owner"){
             const span = document.createElement('span');
             span.innerHTML = "<i>active</i>";

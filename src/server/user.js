@@ -43,7 +43,11 @@ router.get('/notice', async function(req,res){
   }else{
     find = await fetchData.find(findData);
   }
-  const notice = {role:req.me.role, data:find}
+  const find_updated = await activeNotice(find);
+  const notice = {
+    role:req.me.role,
+    data:find_updated,
+  }
   res.send(notice);
 })
 
@@ -116,5 +120,27 @@ function admin(req,res,next){
     res.redirect(301, "/");
   }
 }
+
+//helper to update Notices with active Status
+function activeNotice(data){
+  const today = new Date();
+  const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const weekday = today.getDay();
+  const thisDay = days[weekday];
+
+  for (i in data){
+    if (today>data[i].start && today<data[i].end && data[i].pattern.match(thisDay)){
+      console.log(data[i].notice+" is active today");
+      data[i]["active"] = true;
+    }else{
+      data[i]["active"] = false;
+    }
+  }
+
+  return data
+
+}
+
+
 
 module.exports = router;

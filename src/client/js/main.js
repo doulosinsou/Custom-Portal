@@ -195,14 +195,17 @@ function dropDown(el){
 }
 
 function showNotices(data){
-  for (index of data){
-    const board = document.getElementById("notice_board");
+  const board = document.getElementById("notice_board");
+  for (index in data){
+    console.log(data[index])
+    if(data[index].active == true){
     const wrapper = make("div", ["notice_wrapper"]);
     const content = make("p",["notice_content"]);
-          content.innerText = index.comment;
+          content.innerText = data[index].comment;
 
     wrapper.append(content);
     board.append(wrapper);
+    }
   }
 }
 
