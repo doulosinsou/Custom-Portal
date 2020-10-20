@@ -11,6 +11,7 @@ const adminRouter = require('./admin')
 router.use(myData);
 router.use('/admin', admin, adminRouter)
 
+//portal home page
 router.get('/', function (req,res){
   req.me.backto = "";
   req.me.title = "Portal Home";
@@ -18,6 +19,7 @@ router.get('/', function (req,res){
   res.render('index', req.me);
 });
 
+//user's personal information
 router.get('/me', function (req,res){
   req.me.backto = "/portal/";
   req.me.title = "Account Settings";
@@ -26,6 +28,7 @@ router.get('/me', function (req,res){
   res.render('me', req.me);
 });
 
+//global notice board. (filter by role/job)
 router.get('/notice', async function(req,res){
   let findData = {table:'notice_board'};
   let find
@@ -44,6 +47,7 @@ router.get('/notice', async function(req,res){
   res.send(notice);
 })
 
+//user changes personal information
 router.post('/personal', function(req,res){
   const updateData = {
     change: req.body,
@@ -54,6 +58,7 @@ router.post('/personal', function(req,res){
   fetchData.update(updateData);
 });
 
+//user resets password from panel
 router.post('/passreset', async function(req,res){
   const findData = {
     condition: "ID",
@@ -78,6 +83,7 @@ router.post('/passreset', async function(req,res){
   }
 });
 
+//put user's own information into req
 async function myData(req, res, next){
   //log recent activity
   const now = new Date().setHours(new Date().getHours() - 5);
@@ -88,7 +94,6 @@ async function myData(req, res, next){
     value: req.userId,
     table: "users"
   }
-  // const logTime = "UPDATE users SET lastactive='"+newtime+"' WHERE ID='"+req.userId+"'";
   fetchData.update(updateData);
 
   //get personal info
@@ -103,6 +108,7 @@ async function myData(req, res, next){
   next();
 }
 
+//middleware to check if role is admin
 function admin(req,res,next){
   if (req.me.role === "admin" || req.me.role === "owner"){
     next()

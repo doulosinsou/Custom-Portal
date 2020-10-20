@@ -13,6 +13,14 @@ router.get('/userList', function (req,res){
   res.render('userList', req.me);
 });
 
+//Admin page for listing all notices
+router.get('/noticeBoard', function (req,res){
+  req.me.backto = "/portal/";
+  req.me.title = "Notice Board";
+  req.me.js = "manage_notices.js";
+  res.render('noticeBoard', req.me);
+});
+
 //admin page to see user details
 router.get('/user/:username', async function (req,res){
   const findData = {

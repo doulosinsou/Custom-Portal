@@ -1,6 +1,7 @@
 <main>
 <h3>Welcome back {$name$}</h3>
     <section id="notice_board">
+    <a href="/portal/admin/manageNotices">Edit Notices</a>
     </section>
   <section id="newQ_wrapper" class="block">
     <h4>New Quote</h4>
