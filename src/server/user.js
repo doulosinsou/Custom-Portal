@@ -131,9 +131,9 @@ function activeNotice(data){
   for (i in data){
     if (today>data[i].start && today<data[i].end && data[i].pattern.match(thisDay)){
       console.log(data[i].notice+" is active today");
-      data[i]["active"] = true;
+      data[i]["live"] = true;
     }else{
-      data[i]["active"] = false;
+      data[i]["live"] = false;
     }
   }
 

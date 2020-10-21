@@ -1,16 +1,14 @@
 const jobs=[];
 const roles=["All"];
 window.addEventListener("load", ()=>{
-  roleCall();
-  poptable();
+  roleCall(); //establishes the roles and jobs of users
+  poptable(); //creates list of all notices
 });
 
 async function roleCall(){
-  // make list of available roles and jobs
   const allCall = await fetch("/portal/admin/userList/allUsers");
   const allUsers = await allCall.json();
 
-  //make list of jobs and roles
   for (i of allUsers){
     if (jobs.indexOf(i.job) === -1) jobs.push(i.job);
     if (roles.indexOf(i.role) === -1) roles.push(i.role);
@@ -21,8 +19,8 @@ async function poptable(){
   const table = document.getElementById('manage-notices-table')
   const frag = document.createDocumentFragment();
   const callNotices = await fetch("/portal/notice");
-  let notices = await callNotices.json();
-  notices = notices.data
+  const allNotices = await callNotices.json();
+  const notices = allNotices.data
   //populate table from notices
   for (i in notices){
     const notice = notices[i];
@@ -35,8 +33,24 @@ async function poptable(){
     const title = make('td');
           title.innerText = notice.notice;
           title.setAttribute("data-title","title");
-    const status = make('td');
-          status.innerText = notice.active;
+    const status = make('td',["status"]);
+    const pstat = make('p');
+    const active = make('button');
+          active.setAttribute("onclick", "activate(this)");
+          console.log(notice.active)
+          if(notice.active == true){
+            tr.classList.add("active");
+            status.setAttribute("data-active","true");
+            pstat.innerText = "Active";
+            active.innerText = "Disable";
+          }else{
+            status.setAttribute("data-active", "false");
+            pstat.innerText = "Disabled";
+            active.innerText = "Activate";
+          }
+          status.append(pstat);
+          status.append(active);
+
     const schedule = make('td');
           schedule.innerText = "Input Pattern Here";
     const content = make('td');
@@ -118,17 +132,10 @@ function callUpdate(elem){
 
 }
 
-async function editNotice(row){
-
-  const data = {
-    id: row.id,
-    notice: row.querySelector().innerText,
-    comment: row.querySelector().innerText,
-  }
-  const update = await postIt("/portal/admin/notice", data);
-
-  // location.reload();
-}
+// async function editNotice(data){
+//   const update = await postIt("/portal/admin/notice", data);
+//   // location.reload();
+// }
 
 const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
@@ -226,6 +233,34 @@ function dropDown(el){
     }
   }
 }
+
+function activate(el){
+  const row = el.closest('tr');
+  const status = row.querySelector(".status");
+  const pstat = status.querySelector('p');
+  const active = status.querySelector("button");
+
+  if(status.getAttribute("data-active") === "true"){
+    postIt("/portal/admin/notice", {
+      id:row.id,
+      active: 0
+    });
+    status.setAttribute("data-active", "false");
+    pstat.innerText = "Disabled";
+    active.innerText = "Activate";
+    row.classList.remove("active");
+  }else{
+    postIt("/portal/admin/notice", {
+      id:row.id,
+      active:1
+    });
+    status.setAttribute("data-active", "true");
+    pstat.innerText = "Active";
+    active.innerText = "Disable";
+    row.classList.add("active");
+  }
+}
+
 
 //helper for making elements
 function make(tg, cl){

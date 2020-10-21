@@ -199,7 +199,7 @@ function showNotices(data){
   const board = document.getElementById("notice_board");
   for (index in data){
     console.log(data[index])
-    if(data[index].active == true){
+    if(data[index].live == true){
     const wrapper = make("div", ["notice_wrapper"]);
     const content = make("p",["notice_content"]);
           content.innerText = data[index].comment;

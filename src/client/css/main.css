@@ -151,11 +151,8 @@ footer {
 #table_wrapper {
   overflow-x: auto;
 }
-#table_wrapper tr:nth-child(even) {
-  background-color: lightGray;
-}
-#table_wrapper tr:hover {
-  background-color: gray;
+#table_wrapper .active {
+  background-color: lightBlue;
 }
 #table_wrapper th, #table_wrapper td {
   white-space: nowrap;

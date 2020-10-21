@@ -1,12 +1,16 @@
 #table_wrapper {
   overflow-x:auto;
 
+  .active {
+    background-color: lightBlue;
+  }
+
   tr:nth-child(even){
-    background-color: lightGray;
+    // background-color: lightGray;
   }
 
   tr:hover{
-    background-color: gray;
+    // background-color: gray;
   }
 
   th, td{
