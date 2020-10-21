@@ -167,7 +167,6 @@ footer {
   text-transform: uppercase;
 }
 #table_wrapper .extra {
-  colspan: 0;
   height: 0px;
   overflow: hidden;
 }

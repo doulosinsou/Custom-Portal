@@ -4,78 +4,47 @@ const tableQuery = "&table=users";
 async function poptable(){
   const table = document.getElementById('manage-notices-table')
   const frag = document.createDocumentFragment();
-  const nots = await fetch("/portal/notice");
-  const notices = await us.json()
-
+  const callNotices = await fetch("/portal/notice");
+  let notices = await callNotices.json();
+  notices = notices.data
   //populate table from users objects
   for (i in notices){
-    const tr = document.createElement('tr');
     const notice = notices[i];
-      for (n in notice){
-        const td = document.createElement('td');
+    const tr = make('tr');
+          tr.id = notice.id;
 
-        if (notice.active){
-          console.log("notice is active today");
-          return;
-          if (users[i]["role"] === "owner"){
-            const span = document.createElement('span');
-            span.innerHTML = "<i>active</i>";
-            td.append(span);
-          }else{
-            const drop = document.createElement('select');
-            drop.classList.add("active");
-            drop.setAttribute("onchange", "updateAdmin(this)");
-            drop.setAttribute("name", "active");
+    const title = make('td');
+          title.innerText = notice.notice;
+    const status = make('td');
+          status.innerText = notice.active
+    const schedule = make('td');
+          schedule.innerText = "Input Pattern Here";
+    const content = make('td');
+    const edit = make('button');
+          edit.innerText = "View and Edit";
+          edit.onclick="editContent(this)";
+    const hidden = make('div', ["hidden"]);
+          hidden.innerText = notice.comment;
+          content.append(hidden);
+          content.append(edit);
+    const author = make('td');
+          author.innerText = notice.author;
+    const del = make('td');
+    const delbut = make('button',['delete']);
+          delbut.innerText = "Delete";
+          delbut.setAttribute("onclick","deleteNotice(this)")
+          del.append(delbut);
 
-            const act = document.createElement('option');
-            const inact = document.createElement('option');
-            act.value = 1;
-            act.innerText="active"
-            inact.value=0;
-            inact.innerText="inactive"
+          tr.append(title);
+          tr.append(status);
+          tr.append(schedule);
+          tr.append(content);
+          tr.append(author);
+          tr.append(del);
 
-            if (users[i][n] == 1) act.selected = true;
-            if (users[i][n] == 0) inact.selected = true;
+      table.append(tr);
 
-            drop.append(act);
-            drop.append(inact);
-            td.append(drop);
-          }
-          // const update = document.createElement('button');
-          // update.classList.add("update-active");
-          // update.innerText = "update";
-          // td.append(update);
-
-        }else if(n === "role"){
-          if (users[i]["role"] === "owner"){
-            const span = document.createElement('span');
-            span.innerHTML = "<i>Owner</i>";
-            td.append(span);
-          }else{
-            const drop = document.createElement('select');
-            drop.classList.add("role");
-            drop.setAttribute("onchange", "updateAdmin(this)");
-            drop.setAttribute('name', 'role');
-
-            const admin = document.createElement('option');
-            const user = document.createElement('option');
-            admin.value = "admin";
-            admin.innerText="admin"
-            user.value="user";
-            user.innerText="user"
-
-            if (users[i][n] === "admin") admin.selected = true;
-            if (users[i][n] === "user") user.selected = true;
-
-            drop.append(admin);
-            drop.append(user);
-            td.append(drop);
-          }
-        }else{
-          td.innerText = users[i][n];
-        }
-        tr.append(td);
-      }
+    return
 
     //more link
     const more = document.createElement('td');
@@ -126,37 +95,6 @@ function deleteUser(elem){
 }
 
 
-function userform(){
-  const path = window.location.pathname;
-  const username = path.substr(path.lastIndexOf('/') +1);
-  const job = document.getElementById("jobtitle").value;
-  const update = {
-    job: job
-  }
-  const userQuery = "?username="+username;
-
-  postIt('/portal/admin/update'+userQuery+tableQuery, update);
-}
-
-async function register(){
-  event.preventDefault();
-  const form = document.getElementById("auth");
-  const userData = {
-    username: form.username.value,
-    email: form.email.value
-  };
-
-  const check = await postIt('/register/request', userData);
-
-  const comment = document.getElementById('comment')
-  if (check.nameExists){
-    comment.innerHTML = "Username already exists";
-  }else{
-    comment.innerHTML = "New User sent email to sign up"
-  }
-
-}
-
 const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
     method:'POST',
@@ -171,3 +109,14 @@ const postIt = async (url = '', data = {})=>{
     console.log(error);
   }
 };
+
+//helper for making elements
+function make(tg, cl){
+  const el = document.createElement(tg);
+  if (cl){
+    for (i of cl){
+      el.classList.add(i);
+    }
+ }
+  return el
+}
