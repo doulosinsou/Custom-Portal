@@ -84,7 +84,8 @@ async function buildNotices(data){
     const targetWrapper = make('div',['target_wrapper'])
     const targetClick = make('span', ['click']);
           targetClick.innerText = "Target Audience";
-          targetClick.onclick = function(){dropDown(this)};
+          targetClick.setAttribute("onclick", "dropDown(this)");
+           // .onclick = function(){dropDown(this)};
     const targets = make('ul',['list', 'hidden']);
 
     for (n of roles){

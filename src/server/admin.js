@@ -50,14 +50,21 @@ router.get('/userList/allUsers', async function(req,res){
   res.send(all);
 })
 
-router.post('/notice/', function(req,res){
-  const updateData = {
-    change: req.body,
-    condition: "id",
-    value: req.body.id,
-    table: "notice_board"
+router.post('/notice', function(req,res){
+
+  if(req.body.delete){
+    const del = "DELETE from notice_board WHERE id='"+req.body.id+"'";
+    fetchData.allsql(del);
+  }else{
+    const updateData = {
+      change: req.body,
+      condition: "id",
+      value: req.body.id,
+      table: "notice_board"
+    }
+    fetchData.update(updateData);
   }
-  fetchData.update(updateData);
+  res.send("updated");
 })
 
 //admin update user table

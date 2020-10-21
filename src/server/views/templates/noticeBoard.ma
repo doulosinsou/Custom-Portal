@@ -1,15 +1,16 @@
 <main>
 <h3>Notice Board</h3>
     <div id="notice-list">
-
       <p id="comment"></p>
         <div id="table_wrapper">
           <table id="manage-notices-table">
             <tr>
+              <th></th>
               <th>Title</th>
               <th>Status</th>
               <th>Schedule</th>
               <th>Content</th>
+              <th>Target</th>
               <th>Author</th>
               <th>Delete</th>
             </tr>
@@ -40,8 +41,12 @@
 
             <div id="new-targets"></div>
 
-            <input type="submit">
+            <input type="submit" value="submit">
           </form>
         </div>
     </div>
 </main>
+<div id="edit-content-popup" class="hidden">
+  <textarea id="edit_content"></textarea>
+  <button id="close-pop">Close</button>
+</div>
