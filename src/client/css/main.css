@@ -86,43 +86,40 @@ footer {
   text-align: center;
 }
 
-.notice_wrapper .title_wrapper {
-  position: relative;
-  font-style: normal;
-  font-size: 1.2em;
-  font-weight: bold;
+#manage-notices-table tr .notice_title {
+  box-sizing: border-box;
+  border: 2px transparent dashed;
+}
+#manage-notices-table tr .notice_title:hover {
+  cursor: text;
+  border: 2px rgba(0, 0, 255, 0.3) dashed;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+#manage-notices-table tr .notice_content:hover {
   cursor: text;
 }
-.notice_wrapper .title_wrapper .done {
-  position: absolute;
-  right: 0;
-  top: 0;
-  cursor: pointer;
-}
-.notice_wrapper .notice_content:hover {
-  cursor: text;
-}
-.notice_wrapper .notice_edits * {
+#manage-notices-table tr .notice_edits * {
   align-self: baseline;
 }
-.notice_wrapper .notice_edits .target_wrapper {
+#manage-notices-table tr .notice_edits .target_wrapper {
   z-index: 10;
   position: relative;
   margin: 8px;
 }
-.notice_wrapper .notice_edits .target_wrapper * {
+#manage-notices-table tr .notice_edits .target_wrapper * {
   cursor: pointer;
 }
-.notice_wrapper .notice_edits .target_wrapper span {
+#manage-notices-table tr .notice_edits .target_wrapper span {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 8px;
   padding-right: 50px;
   display: inline-block;
 }
-.notice_wrapper .notice_edits .target_wrapper span:after {
+#manage-notices-table tr .notice_edits .target_wrapper span:after {
   content: ">";
 }
-.notice_wrapper .notice_edits .target_wrapper .list {
+#manage-notices-table tr .notice_edits .target_wrapper .list {
   max-height: 150px;
   overflow: scroll;
   background-color: #fff;
@@ -134,17 +131,17 @@ footer {
   border-top: none;
   margin: 0;
 }
-.notice_wrapper .notice_edits .target_wrapper .list input[type=checkbox] {
+#manage-notices-table tr .notice_edits .target_wrapper .list input[type=checkbox] {
   display: none;
 }
-.notice_wrapper .notice_edits .target_wrapper ul.list li {
+#manage-notices-table tr .notice_edits .target_wrapper ul.list li {
   padding: 5px 0;
   display: block;
 }
-.notice_wrapper .notice_edits .target_wrapper ul.list li:hover {
+#manage-notices-table tr .notice_edits .target_wrapper ul.list li:hover {
   background-color: #99b3ff;
 }
-.notice_wrapper .notice_edits .target_wrapper ul.list li.checked {
+#manage-notices-table tr .notice_edits .target_wrapper ul.list li.checked {
   font-weight: bold;
   background-color: #99b3ff;
 }
@@ -204,6 +201,10 @@ main section {
 
 .hidden {
   display: none;
+}
+
+.clickMe:hover {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=main.css.map */

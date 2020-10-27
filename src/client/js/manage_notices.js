@@ -29,10 +29,14 @@ async function poptable(){
 
     const update = make('td');
     const updateButton = make('button', ["update", "hidden"])
+          updateButton.innerText="Update Row"
+          updateButton.setAttribute("onclick", "callUpdate(this)")
           update.append(updateButton);
-    const title = make('td');
+    const title = make('td',["notice_title"]);
           title.innerText = notice.notice;
           title.setAttribute("data-title","title");
+          title.setAttribute("onclick", "this.addEventListener('input', function(){showUpdate(this)})")
+          title.contentEditable = true;
     const status = make('td',["status"]);
     const pstat = make('p');
     const active = make('button');
@@ -53,7 +57,7 @@ async function poptable(){
 
     const schedule = make('td');
           schedule.innerText = "Input Pattern Here";
-    const content = make('td');
+    const content = make('td', ["hidden-content"]);
     const edit = make('button');
           edit.innerText = "View and Edit";
           edit.setAttribute("onclick", "toggleEditNotice(this)");
@@ -119,16 +123,50 @@ function toggleEditNotice(elem){
     const row = elem.closest("tr");
     const content = row.querySelector("[data-content]").innerText; document.getElementById("edit_content").value = content;
 
-    document.getElementById("close-pop").addEventListener("click", toggleEditNotice);
+    document.getElementById("close-pop").addEventListener("click", function (el){
+      row.querySelector("[data-content]").innerText = document.getElementById("edit_content").value;
+      toggleEditNotice();
+    })
+    showUpdate(elem);
   }
 }
 
-function callUpdate(elem){
+function showUpdate(elem){
   const row = elem.closest("tr");
-  const upBut = row.querySelector("update");
+  const upBut = row.querySelector(".update");
   upBut.classList.remove("hidden");
+}
 
-  upBut.addEventListener("click", editNotice(row))
+function callUpdate(elem){
+
+  const notice = elem.closest("tr");
+  console.log(notice)
+      const pattern = [];
+      const days = notice.querySelectorAll('.notice_day input');
+        for (i of days){
+          if (i.checked){
+            pattern.push(i.value);
+          }
+        }
+
+      const targets = []
+      const list = notice.querySelectorAll(".list .checked");
+        for (i of list){
+            targets.push(i.querySelector("input").value);
+        }
+
+      const changed = {
+        id: notice.id,
+        notice: notice.querySelector("[data-title='title']").innerText,
+        comment: notice.querySelector("[data-content='content']").innerText,
+        pattern: pattern,
+        // start: notice.querySelector("[name='start']").value,
+        // end: notice.querySelector("[name='end']").value,
+        target: targets,
+      };
+
+      console.log(changed);
+      // postIt('/portal/admin/notice', changed);
 
 }
 
