@@ -18,14 +18,25 @@
 
 
   .notice_save{}
-  .notice_edits{
-      *{
-        align-self:baseline;
-      }
+  .notice_pattern{
+    .notice_day{
 
-    .notice_pattern{}
-    .notice_day{}
-    .target_wrapper{
+      li{
+        display: inline;
+      }
+      li:hover{
+          cursor:pointer;
+        }
+      }
+    .date_range{
+      padding: 20px 0;
+
+      .pat_date{
+        flex: 1;
+      }
+    }
+  }
+  .target_wrapper{
       z-index:10;
       position: relative;
       margin: 8px;
@@ -77,5 +88,5 @@
 
     }
     .list{}
-  }
+
 }

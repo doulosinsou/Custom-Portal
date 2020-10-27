@@ -56,7 +56,63 @@ async function poptable(){
           status.append(active);
 
     const schedule = make('td');
-          schedule.innerText = "Input Pattern Here";
+          // schedule.innerText = "Input Pattern Here";
+
+          //make days pattern
+          const pattern = make("div",["notice_pattern"]);
+
+          const patDay = make("ul", ["notice_day"]);
+          const week = ["sun","mon","tue","wed","thu","fri","sat"];
+
+            for (j of week){
+              const li = make("li");
+              const day = make("input");
+                if (notice.pattern.match(j)){
+                  day.setAttribute("checked", true);
+                }
+              day.type = "checkbox";
+              day.id = j;
+              day.value = j;
+
+              const label = make("label");
+              label.setAttribute("for", j);
+              label.innerText = j;
+
+              li.append(day);
+              li.append(label);
+              patDay.append(li);
+            }
+
+          const patRange = make("div",["date_range", "flex"]);
+
+          const startWrap = make("div",["pat_date"]);
+          const startTitle = make("p");
+                startTitle.innerText = "From";
+          const start = make('input');
+                start.name = "start";
+                start.type = "date";
+                start.value =notice.start.slice(0,10);
+                startWrap.append(startTitle)
+                startWrap.append(start)
+
+          const endWrap = make("div",["pat_date"]);
+          const endTitle = make("p");
+                endTitle.innerText = "To"
+          const end = make('input');
+                end.name = "end";
+                end.type = "date";
+                end.value = notice.end.slice(0,10);
+                endWrap.append(endTitle);
+                endWrap.append(end);
+
+                patRange.append(startWrap);
+                patRange.append(endWrap);
+
+          pattern.append(patDay);
+          pattern.append(patRange);
+          schedule.append(pattern);
+
+
     const content = make('td', ["hidden-content"]);
     const edit = make('button');
           edit.innerText = "View and Edit";

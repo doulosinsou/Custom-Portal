@@ -99,27 +99,36 @@ footer {
 #manage-notices-table tr .notice_content:hover {
   cursor: text;
 }
-#manage-notices-table tr .notice_edits * {
-  align-self: baseline;
+#manage-notices-table tr .notice_pattern .notice_day li {
+  display: inline;
 }
-#manage-notices-table tr .notice_edits .target_wrapper {
+#manage-notices-table tr .notice_pattern .notice_day li:hover {
+  cursor: pointer;
+}
+#manage-notices-table tr .notice_pattern .date_range {
+  padding: 20px 0;
+}
+#manage-notices-table tr .notice_pattern .date_range .pat_date {
+  flex: 1;
+}
+#manage-notices-table tr .target_wrapper {
   z-index: 10;
   position: relative;
   margin: 8px;
 }
-#manage-notices-table tr .notice_edits .target_wrapper * {
+#manage-notices-table tr .target_wrapper * {
   cursor: pointer;
 }
-#manage-notices-table tr .notice_edits .target_wrapper span {
+#manage-notices-table tr .target_wrapper span {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 8px;
   padding-right: 50px;
   display: inline-block;
 }
-#manage-notices-table tr .notice_edits .target_wrapper span:after {
+#manage-notices-table tr .target_wrapper span:after {
   content: ">";
 }
-#manage-notices-table tr .notice_edits .target_wrapper .list {
+#manage-notices-table tr .target_wrapper .list {
   max-height: 150px;
   overflow: scroll;
   background-color: #fff;
@@ -131,17 +140,17 @@ footer {
   border-top: none;
   margin: 0;
 }
-#manage-notices-table tr .notice_edits .target_wrapper .list input[type=checkbox] {
+#manage-notices-table tr .target_wrapper .list input[type=checkbox] {
   display: none;
 }
-#manage-notices-table tr .notice_edits .target_wrapper ul.list li {
+#manage-notices-table tr .target_wrapper ul.list li {
   padding: 5px 0;
   display: block;
 }
-#manage-notices-table tr .notice_edits .target_wrapper ul.list li:hover {
+#manage-notices-table tr .target_wrapper ul.list li:hover {
   background-color: #99b3ff;
 }
-#manage-notices-table tr .notice_edits .target_wrapper ul.list li.checked {
+#manage-notices-table tr .target_wrapper ul.list li.checked {
   font-weight: bold;
   background-color: #99b3ff;
 }
