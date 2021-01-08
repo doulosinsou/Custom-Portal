@@ -31,7 +31,7 @@ async function login(){
     password: form.pass.value,
   };
   const valid = validate(userData, "logErr");
-  if (!valid) throw "invalid entry";
+  if (valid !== ""){return};
   const check = await postIt('/login', userData);
   console.log("login called");
   console.log(check);
@@ -43,17 +43,18 @@ async function login(){
 }
 
 function validate(userData, warning){
-  const warn = document.getElementById(warning);
   if (userData.nameExists){
-    warning.innerHTML = userData.nameExists;
+    document.getElementById(warning).innerHTML = userData.nameExists;
+    return false;
   }else{
+    let empty = "";
     for (data in userData){
       if (!userData[data]) {
-        warning.innerHTML = warning.innerHTML + "<br> Please enter "+userData[data]
-      }else{
-        return true;
+        empty += "Please enter "+data+"<br>";
       }
     }
+    document.getElementById(warning).innerHTML = empty;
+    return empty;
   }
 }
 

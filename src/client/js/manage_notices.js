@@ -123,7 +123,7 @@ async function poptable(){
           content.append(hidden);
           content.append(edit);
     const targ = make('td');
-          targ.append(targets(notice));
+          targ.append(await targets(notice));
     const author = make('td');
           author.innerText = notice.author;
     const del = make('td');
@@ -226,11 +226,6 @@ function callUpdate(elem){
 
 }
 
-// async function editNotice(data){
-//   const update = await postIt("/portal/admin/notice", data);
-//   // location.reload();
-// }
-
 const postIt = async (url = '', data = {})=>{
   const call = await fetch(url, {
     method:'POST',
@@ -247,7 +242,19 @@ const postIt = async (url = '', data = {})=>{
 };
 
 //make the target Audience list
-function targets(notice){
+async function targets(notice){
+  // // make list of available roles and jobs
+  // const allCall = await fetch("/portal/admin/userList/allUsers");
+  // const allUsers = await allCall.json();
+  // const jobs=[];
+  // const roles=["All"];
+  //
+  // //make list of jobs and roles
+  // for (i of allUsers){
+  //   if (jobs.indexOf(i.job) === -1) jobs.push(i.job);
+  //   if (roles.indexOf(i.role) === -1) roles.push(i.role);
+  // }
+
   //drop down multiSelect for intended targets
   const targetWrapper = make('div',['target_wrapper'])
   const targetClick = make('span', ['click']);
@@ -256,14 +263,14 @@ function targets(notice){
          // .onclick = function(){dropDown(this)};
   const targets = make('ul',['list', 'hidden']);
 
-  for (n of roles){
+  for (n of await roles){
     list(n);
   }
 
   // const break = make('hr');
   // targets.append(break);
 
-  for (n of jobs){
+  for (n of await jobs){
     list(n)
   }
   //helper to write the list

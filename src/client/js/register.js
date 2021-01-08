@@ -10,7 +10,12 @@ console.log("js connected");
   // if (resForm){
   //   reset.addEventListener("submit", reset);
   // }
+
+  // This is for the password reset. Should move it to the reset page
   document.getElementById('reset').addEventListener("submit", reset)
+
+  //For This file. Keep this.
+  document.getElementById("auth").addEventListener("submit", register);
 }
 
 async function register(){

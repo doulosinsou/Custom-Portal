@@ -57,8 +57,8 @@ async function makeEmail(data){
   function findTag(string, tag){
     const reg = "<"+tag+">.*?[\\S\\s]*<\\/"+tag+">";
     const found = string.match(reg).join(/\n/);
-    openL = tag.length + 2;
-    closeL = tag.length + 3;
+    const openL = tag.length + 2;
+    const closeL = tag.length + 3;
     const content = found.substring(openL, found.length - closeL);
     return content;
   }
