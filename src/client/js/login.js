@@ -43,19 +43,20 @@ async function login(){
 }
 
 function validate(userData, warning){
-  if (userData.nameExists){
-    document.getElementById(warning).innerHTML = userData.nameExists;
-    return false;
-  }else{
-    let empty = "";
-    for (data in userData){
-      if (!userData[data]) {
-        empty += "Please enter "+data+"<br>";
-      }
-    }
-    document.getElementById(warning).innerHTML = empty;
-    return empty;
-  }
+  // if (userData.nameExists){
+  //   document.getElementById(warning).innerHTML = userData.nameExists;
+  //   return false;
+  // }
+  // else{
+  //   let empty = "";
+  //   for (data in userData){
+  //     if (!userData[data]) {
+  //       empty += "Please enter "+data+"<br>";
+  //     }
+  //   }
+  //   document.getElementById(warning).innerHTML = empty;
+  //   return empty;
+  // }
 }
 
 async function logCheck(){

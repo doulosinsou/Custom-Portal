@@ -16,7 +16,7 @@ router.post('/request', register, function (req,res,next){
     subject: "Verify Account",
     template: "register",
     match: {
-      activate: "http://localhost:3111/register/reset/?token="+req.data.token
+      activate: "http://localhost:3111/register/verify/?token="+req.data.token
     }
   }
   mailer(options);

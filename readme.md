@@ -93,18 +93,8 @@ _This is the static page returned by the request to the server_
 4. Listen for login form submission. call __`login`__ function
     1. Stop browser from refreshing (*that would cancel the req cycle*)
     2. obtain the form data, mainly the username and password
-    3. pass data to __`validate`__ function along with a dummy string
-        1. check if the data contains a "nameExists" key (*used in a separate call to this function*)
-          - if so, insert the warning specified into the ID specified from the warning parameter
-          - return false to stop __`login`__ from attempting to redirect
-        2. Loop through keys in the login form data <mark>Consider using Reistration Validator</mark>  
-            1. declare an empty string variable (*we have to return a true value for the cumulation of keys if any one of them is false, and a false value if all the keys are true*)
-            2. Check if data exists each key (*if value is false then the user did not type anything into the form of that key name*)
-              - concatinate a warning string for each key with missing value
-        3. display the sum of warnings in the warning ID specified by the warning parameter (*display "" if all keys have value*)
-        4. return the string of summed warnings.
-    4. Check if the __`validate`__ function returns a blank value warnings (*if string is "" then no warnings exist. Proceed with code*)
-      -If the returned string has value, then halt the code execution with a return
+    3. pass data to __`validate`__ function along with a string defining the warning element id.
+    4. <mark>Need to apply universal form Validator</mark>
     5. Submit the validated form data to the server path "/login" through the helper function __`postIt`__:
         1. declare an async arrow function
         2. fetch the parameters from the server
@@ -129,12 +119,59 @@ _This is the static page returned by the request to the server_
 _This is the static page linked from the index.html homepage_
 
 1. When the window loads, begin the __`start`__ function
-2. <mark>Move user reset password somewhere else</mark>
+2. <mark>Move user __`reset`__ password somewhere else</mark>
 3. Listen for register form submission. Call __`register`__ function
     1. prevent screen from refreshing
     2. Place form data into object with username, email, pass, and verification keys.
-    3. send the form data through __`vali`__ function with the data 
+    3. send the form data through __`vali`__ function with a parameter for notice elementId
+        1. Check the password against __`validate`__ function <mark>Must pass all form data through validator</mark>
+        3. If __`validate`__ returns an alert key, then the validation failed:
+          - Display notice of failed items to user
+    4. if __`vali`__ returns False, then stop the process
+    5. Post the validated form data to '/register/request'
+**From the server/register.js called by register.html**
+Require express and call the `Router()` method
+Apply body-parser.
+Require 'path', 'bcryptjs', '/mysql', and '/mail/mail_handler'
+    1. establish a post route for '/request'
+    2. pass the request through the local __`register`__ middleware
+        1. Retrieve the current time of request and format it for SQL table
+        2. call the local __`createUser`__ function, passing an object conatinaing the username, email, token, active status, and signup date (1. above)
+            - (*The token serves the purpose of a unique verification url parameter to be sent by email. When user clicks on url, this token will be used as a single time customer ID to activate the account*)
+            - Token is created by local function __`verifyCode()`__
+                1. Generate random number (10^6)
+                2. Ensure that the number is exactly 10^6 in length by adding '0's until the random number reaches 10^6
+                3. Use `bcrypt` to hash the number (*make it impossible for a human to remember*)
+                4. return hashed number as the token
+            - The __`createUser`__ function is as follows:
+                1. Check for return value of helper function __`exists`__, passing an object, column, and data to search the SQL database.
+                    - Use the SELECT EXISTS sql query of the passed information
+                    - [see sql file below](#mysql)
+                    - return the boolean of that search
+                2. If __`exists`__ returns true then that username submitted by the new registration request is already taken
+                3. return the object key *nameExists*
+                4. If the name is free to use: create columns and rows based on object passed to __`createUser`__ .
+                5. Construct a query to create a new row from submitted data
+                6. Discover the newly created row and return it to the __`createUser`__ call.
+                7. Now the `created` variable which fetches __`createUser`__ is an object containing the actual data from the newly constructed row in the database
+        3. check if `created` variable is false
+            - if so return to the req that there was a problem with using the sql function
+        4. check if a `nameExists` key is returned. This means the username is already taken
+            - send an immediate response to the client with the `nameExists` key
+        5. add the successfully created user row to the req 
+        6. Move to next function
+    3. Move on the inline function:
+        1. Declare an object with pertinent information for an email
+        2. use the __`mailer`__ function which was required from '/mail/mail_handler'
+        3. [See mailer function below](#mail_handler)
+
+
+**From the client/js/register.js**
+    1. If the server returns the key:nameExists, then display notice to user.
+    2. If validation passes, then divert
 
 ## <a name="mysql"></a>MySQL
+
+## <a name="mail_handler"></a>Mail Handler
 
 ## <a name="user-interface"></a>User Interface

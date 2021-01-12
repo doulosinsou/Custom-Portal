@@ -21,16 +21,16 @@
       <p id="comment"></p>
       <form id = "log" Method="POST">
         <label for="username">UserName</label>
-        <input type="text" name="username">
+        <input type="text" name="username" required>
         <label for="pass">password</label>
-        <input type="password" name="pass">
+        <input type="password" name="pass" required>
         <button id="login">Login</button>
       </form>
       <p id="logErr"></p>
       <button id="forgot">Reset Password</button>
       <form id="reset" Method="POST">
         <label for="email">Email associated with your account</label>
-        <input type="email" name="email">
+        <input type="email" name="email" required>
         <button type="submit">Request Password Reset</button>
       </form>
       <p id="notice"></p>
