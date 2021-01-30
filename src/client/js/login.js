@@ -55,7 +55,8 @@ function validate(userData, warning){
   //     }
   //   }
   //   document.getElementById(warning).innerHTML = empty;
-  //   return empty;
+    // return empty;
+    return ""
   // }
 }
 
@@ -66,6 +67,9 @@ async function logCheck(){
     headers: {'Content-Type': 'application/json'}
   });
   const json = await check.json();
+  if (!json){
+    document.getElementById("comment").innerHTML = "<em>There is a connection problem with the server</em>"
+  }
   if (json.render){
     window.location.href = json.render;
   }

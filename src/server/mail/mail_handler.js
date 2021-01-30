@@ -68,7 +68,7 @@ async function makeEmail(data){
 
     for (mark in marks){
       let tag = marks[mark];
-      let raw= tag.substring(2, tag.length-2);
+      let raw = tag.substring(2, tag.length-2);
       string = string.replace(tag, data.match[raw]);
     }
     return string;

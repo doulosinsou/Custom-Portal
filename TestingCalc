@@ -1,0 +1,76 @@
+//helper function to obtain item values and run calculations
+const calc_a = (thisy, override)=>{
+  //determine default vs user provided values called `args`
+  const args = thisy.Args;
+  for (let a in override){
+    args[a] = override[a];
+  }
+
+  //obtain item data to use in calculation
+  let data={};
+  const get_data = thisy.List_dir;
+  for (let dir of get_data){
+    for (let itm of thisy.List){
+      if (eval(dir)[itm]){
+        data[itm] = eval(dir)[itm].Val();
+      }
+
+    }
+  }
+  console.log(data)
+  //run the calculation specified by item property `Cal`
+  return eval(thisy.Cal);
+};
+
+//Items to use in calculations
+const items = {
+   id0001: {
+    Display_Name: "Thermostat",
+    Num: 40,
+    Val: function(){return this.Num},
+  },
+  id0002: {
+    Display_Name: "Wiring",
+    Num: 10,
+    Val: function(){return this.Num},
+  },
+  id0003: {
+    Display_Name: "Labor",
+    Num: 40,
+    Val: function(){return this.Num},
+  }
+}
+
+//Combination calculations
+const sets = {
+  id0004: {
+    Display_Name: "Package",
+    List: ["id0001","id0002","id0003","id0005"], //This is the list of items used in the calculations
+    List_dir: ["items", "sets"], //directory(ies) to obtain items from
+    Args: {hours:2},
+    Cal: "data.id0001 + data.id0002 + ( data.id0003 * args.hours ) + data.id0005", //This is the formula
+    Val: function(override){return calc_a(this, override)}, // This calls the data of items and executes the formula.
+  },
+  id0005: {
+    Display_Name: "Gear",
+    List: ["id0001","id0002"], //This is the list of items used in the calculations
+    List_dir: ["items"], //directory(ies) to obtain items from
+    Args: {},
+    Cal: "data.id0001 * data.id0002", //This is the formula
+    Val: function(override){return calc_a(this, override)}, // This calls the data of items and executes the formula.
+  }
+}
+
+const tax_rate = 9.5;
+
+const [id1, id2, id3, pack] = [items.id0001, items.id0002, items.id0003, sets.id0004];
+const pack_arg = pack.Val({hours:8});
+
+console.log(
+  id1.Display_Name + ": \t$" + id1.Val() +"\n",
+  id2.Display_Name + ": \t$" + id2.Val() +"\n",
+  id3.Display_Name + ": \t$" + id3.Val()+"/hr" +"\n",
+  pack.Display_Name+ ": \t$"+pack_arg +"\n",
+  "Tax: \t\t$"+(pack_arg*(tax_rate/100))+"\n",
+  "Total: \t$"+pack_arg*(1+tax_rate/100)
+)

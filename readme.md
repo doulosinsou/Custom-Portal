@@ -65,6 +65,65 @@ Start the app on a custom port.
       - proceed
 4. Pass all requests to url to the static index.html (*this is a repeat call for the sake of the logged in users as well as failed users and registration requests*)
 
+## <a name="Registration"></a>Registration
+**From the client/js/register.js activated by direct link in index.html**
+
+_This is the static page linked from the index.html homepage_
+
+1. When the window loads, begin the __`start`__ function
+2. <mark>Move user __`reset`__ password somewhere else</mark>
+3. Listen for register form submission. Call __`register`__ function
+    1. prevent screen from refreshing
+    2. Place form data into object with username, email, pass, and verification keys.
+    3. send the form data through __`vali`__ function with a parameter for notice elementId
+        1. Check the password against __`validate`__ function <mark>Must pass all form data through validator</mark>
+        3. If __`validate`__ returns an alert key, then the validation failed:
+          - Display notice of failed items to user
+    4. if __`vali`__ returns False, then stop the process
+    5. Post the validated form data to '/register/request'
+**From the server/register.js called by register.html**
+Require express and call the `Router()` method
+Apply body-parser.
+Require 'path', 'bcryptjs', '/mysql', and '/mail/mail_handler'
+    1. establish a post route for '/request'
+    2. pass the request through the local __`register`__ middleware
+        1. Retrieve the current time of request and format it for SQL table
+        2. call the local __`createUser`__ function, passing an object conatinaing the username, email, token, active status, and signup date (1. above)
+            - (*The token serves the purpose of a unique verification url parameter to be sent by email. When user clicks on url, this token will be used as a single time customer ID to activate the account*)
+            - Token is created by local function __`verifyCode()`__
+                1. Generate random number (10^6)
+                2. Ensure that the number is exactly 10^6 in length by adding '0's until the random number reaches 10^6
+                3. Use `bcrypt` to hash the number (*make it impossible for a human to remember*)
+                4. return hashed number as the token
+            - The __`createUser`__ function is as follows:
+                1. Check for return value of helper function __`exists`__, passing an object, column, and data to search the SQL database.
+                    - Use the SELECT EXISTS sql query of the passed information
+                    - [see sql file below](#mysql)
+                    - return the boolean of that search
+                2. If __`exists`__ returns true then that username submitted by the new registration request is already taken
+                3. return the object key *nameExists*
+                4. If the name is free to use: create columns and rows based on object passed to __`createUser`__ .
+                5. Construct a query to create a new row from submitted data
+                6. Discover the newly created row and return it to the __`createUser`__ call.
+                7. Now the `created` variable which fetches __`createUser`__ is an object containing the actual data from the newly constructed row in the database
+        3. check if `created` variable is false
+            - if so return to the req that there was a problem with using the sql function
+        4. check if a `nameExists` key is returned. This means the username is already taken
+            - send an immediate response to the client with the `nameExists` key
+        5. add the successfully created user row to the req
+        6. Move to next function
+    3. Move on the inline function:
+        1. Declare an object with pertinent information for an email
+        2. use the __`mailer`__ function which was required from '/mail/mail_handler'
+        3. [See mailer function below](#mail_handler)
+
+
+**From the client/js/register.js**
+    1. If the server returns the key:nameExists, then display notice to user.
+    2. If validation passes, then divert to user path (*In this case, simply going to homepage*)
+
+    
+
 ## <a name="name"></a>Login
 **From the client/js/login.js activated by index.html**
 
@@ -113,62 +172,6 @@ _This is the static page returned by the request to the server_
     4. A return of key:noEmail displays a notice to the user
     5. Else a notice tells user to check their email
 
-## <a name="Registration"></a>Registration
-**From the client/js/register.js activated by index.html**
-
-_This is the static page linked from the index.html homepage_
-
-1. When the window loads, begin the __`start`__ function
-2. <mark>Move user __`reset`__ password somewhere else</mark>
-3. Listen for register form submission. Call __`register`__ function
-    1. prevent screen from refreshing
-    2. Place form data into object with username, email, pass, and verification keys.
-    3. send the form data through __`vali`__ function with a parameter for notice elementId
-        1. Check the password against __`validate`__ function <mark>Must pass all form data through validator</mark>
-        3. If __`validate`__ returns an alert key, then the validation failed:
-          - Display notice of failed items to user
-    4. if __`vali`__ returns False, then stop the process
-    5. Post the validated form data to '/register/request'
-**From the server/register.js called by register.html**
-Require express and call the `Router()` method
-Apply body-parser.
-Require 'path', 'bcryptjs', '/mysql', and '/mail/mail_handler'
-    1. establish a post route for '/request'
-    2. pass the request through the local __`register`__ middleware
-        1. Retrieve the current time of request and format it for SQL table
-        2. call the local __`createUser`__ function, passing an object conatinaing the username, email, token, active status, and signup date (1. above)
-            - (*The token serves the purpose of a unique verification url parameter to be sent by email. When user clicks on url, this token will be used as a single time customer ID to activate the account*)
-            - Token is created by local function __`verifyCode()`__
-                1. Generate random number (10^6)
-                2. Ensure that the number is exactly 10^6 in length by adding '0's until the random number reaches 10^6
-                3. Use `bcrypt` to hash the number (*make it impossible for a human to remember*)
-                4. return hashed number as the token
-            - The __`createUser`__ function is as follows:
-                1. Check for return value of helper function __`exists`__, passing an object, column, and data to search the SQL database.
-                    - Use the SELECT EXISTS sql query of the passed information
-                    - [see sql file below](#mysql)
-                    - return the boolean of that search
-                2. If __`exists`__ returns true then that username submitted by the new registration request is already taken
-                3. return the object key *nameExists*
-                4. If the name is free to use: create columns and rows based on object passed to __`createUser`__ .
-                5. Construct a query to create a new row from submitted data
-                6. Discover the newly created row and return it to the __`createUser`__ call.
-                7. Now the `created` variable which fetches __`createUser`__ is an object containing the actual data from the newly constructed row in the database
-        3. check if `created` variable is false
-            - if so return to the req that there was a problem with using the sql function
-        4. check if a `nameExists` key is returned. This means the username is already taken
-            - send an immediate response to the client with the `nameExists` key
-        5. add the successfully created user row to the req 
-        6. Move to next function
-    3. Move on the inline function:
-        1. Declare an object with pertinent information for an email
-        2. use the __`mailer`__ function which was required from '/mail/mail_handler'
-        3. [See mailer function below](#mail_handler)
-
-
-**From the client/js/register.js**
-    1. If the server returns the key:nameExists, then display notice to user.
-    2. If validation passes, then divert
 
 ## <a name="mysql"></a>MySQL
 
